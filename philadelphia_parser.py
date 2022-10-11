@@ -22,12 +22,12 @@ id='dataset-resources').find('ul').find_all(True, recursive=False)
         csv_element_children = csv_element.find_all(True, recursive=False)
         csv_name = csv_element_children[0].text.split('(')[0]
         csv_link = \
-        csv_element_children[2].find_all(True, 
+            csv_element_children[2].find_all(True, 
 recursive=False)[1].find_all(True, recursive=False)[1].find('a')[
-            'href']
+                'href']
         if year in csv_name:
-            with requests.Session() as s:
-                download = s.get(csv_link)
+            with requests.Session() as session:
+                download = session.get(csv_link)
                 decoded_content = download.content.decode('utf-8')
                 table = pd.read_csv(io.StringIO(decoded_content))
                 print(table.head())
