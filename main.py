@@ -2,6 +2,7 @@ import philadelphia_parser
 import fbi_api
 import dc_parser
 import baltimore_parser
+import charlotte_parser
 
 def testFbiApi():
    apiKey = "?API_KEY=zZAJhHKFBdhY3xduUAUS9uGtLrnnc33EwMIgdCcz"
@@ -12,6 +13,10 @@ def testDcParser():
 
 def testBaltimoreParser():
    baltimore_parser.baltimore_crime()
+
+def testCharlotteParser():
+   charlotte_parser.charlotte_incident_reports()
+   charlotte_parser.charlotte_violent_crime()
 
 if __name__ == "__main__":
    # testDcParser()
