@@ -12,8 +12,7 @@ def format_table_view():
 
 
 def philadelphia_data_by_year(year):
-    philadelphia_crime_data_website = 
-requests.get('https://www.opendataphilly.org/dataset/crime-incidents')
+    philadelphia_crime_data_website = requests.get('https://www.opendataphilly.org/dataset/crime-incidents')
     soup = BeautifulSoup(philadelphia_crime_data_website.content, 
 'html.parser')
     csv_list = soup.find('section', 
