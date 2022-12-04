@@ -60,7 +60,7 @@ def get_city_crime_data():
                 res = pd.concat([start_year_res, end_year_res], axis=0)
             else:
                 res = start_year_res
-            res_json = res.to_json()
+            res_json = res.to_json(orient='records')
         return res_json
     except:
         return {}

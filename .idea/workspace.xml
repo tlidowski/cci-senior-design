@@ -5,13 +5,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="8191229b-13e5-45f5-8555-fd13acb5506e" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/senior-design-scratch.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/senior-design-scratch.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/crime_eye/templates/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/crime_eye/templates/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/fbi_flask/app.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/fbi_flask/static/loadData.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/fbi_flask/templates/home.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/crime_eye/app_route.py" beforeDir="false" afterPath="$PROJECT_DIR$/crime_eye/app_route.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -83,9 +78,9 @@
       <envs>
         <env name="PYTHONUNBUFFERED" value="1" />
       </envs>
-      <option name="SDK_HOME" value="" />
+      <option name="SDK_HOME" value="/usr/local/bin/python3.9" />
       <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/crime_eye" />
-      <option name="IS_MODULE_SDK" value="true" />
+      <option name="IS_MODULE_SDK" value="false" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <option name="SCRIPT_NAME" value="$PROJECT_DIR$/crime_eye/app_route.py" />
@@ -118,6 +113,11 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
+    <list>
+      <item itemvalue="Python.app" />
+      <item itemvalue="Python.app_route" />
+      <item itemvalue="Python.main" />
+    </list>
     <recent_temporary>
       <list>
         <item itemvalue="Python.app_route" />
