@@ -1,10 +1,5 @@
 import requests
-import pandas as pd
-import plotly.express as px
-import matplotlib.pyplot as plt
-import csv
-from bs4 import BeautifulSoup
-import io
+
 
 def national_crime_estimate_to_from_year(start, end, key):
     base = 'https://api.usa.gov/crime/fbi/sapi/api'

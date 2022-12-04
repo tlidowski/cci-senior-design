@@ -1,10 +1,4 @@
 import requests
-import pandas as pd
-import plotly.express as px
-import matplotlib.pyplot as plt
-import csv
-from bs4 import BeautifulSoup
-import io
 
 
 def dc_crime_2022():
