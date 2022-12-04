@@ -2,58 +2,9 @@ from api_calls import baltimore_parser, charlotte_parser, dc_parser, fbi_api
 import pandas as pd
 
 
-def apply_mask(df, column_name, value):
-    mask = (df[column_name] == value)
-    # apply mask to result
-    res = df[mask]
-    return res
-
-
-def get_city_crime_data(start_year, end_year, city_name):
-    path_2020 = f'combined_city_data/city_data-{2020}.csv'
-    path_2021 = f'combined_city_data/city_data-{2021}.csv'
-
-    column_types = {
-        'CITY_NAME': 'object',
-        'STATE_NAME': 'object',
-        'CRIME_CODE': 'object',
-        'CRIME_DESCRIPTION': 'object',
-        'DATE_REPORTED': 'object',
-        'DATE_OCCURRED': 'object',
-        'LATITUDE': 'float64',
-        'LONGITUDE': 'float64',
-        'DATE_FORMAT': 'object'
-    }
-
-    year_csvs = {"2020": path_2020,
-                 "2021": path_2021
-                 }
-
-    if (start_year in year_csvs.keys()) and (end_year in year_csvs.keys()):
-        start_year_df = pd.read_csv(year_csvs[start_year],
-                                    dtype=column_types
-                                    )
-        start_year_res = apply_mask(start_year_df, 'CITY_NAME', city_name)
-
-        end_year_df = []
-        end_year_res = []
-
-        if start_year != end_year:
-            end_year_df = pd.read_csv(year_csvs[end_year],
-                                      dtype=column_types)
-            end_year_res = apply_mask(end_year_df, 'CITY_NAME', city_name)
-
-        res = None
-        if len(end_year_res) != 0:
-            res = pd.concat([start_year_res, end_year_res], axis=0)
-        else:
-            res = start_year_res
-        print(res)
-
-
 if __name__ == "__main__":
     pd.set_option('display.max_columns', None)
-    get_city_crime_data("2020", "2021", "BALTIMORE")
+    #get_city_crime_data("2020", "2021", "BALTIMORE")
 
     # TESTING API CALLS
     # def testFbiApi():

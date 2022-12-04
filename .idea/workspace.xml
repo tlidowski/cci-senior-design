@@ -5,47 +5,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="8191229b-13e5-45f5-8555-fd13acb5506e" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/api_calls/baltimore_parser.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/api_calls/charlotte_parser.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app_route.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/2022_data/Baltimore-2022.csv" beforeDir="false" afterPath="$PROJECT_DIR$/datasets/2022_data/Baltimore-2022.csv" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/2022_data/Denver-2022.csv" beforeDir="false" afterPath="$PROJECT_DIR$/datasets/2022_data/Denver-2022.csv" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/2022_data/Detroit-2022.csv" beforeDir="false" afterPath="$PROJECT_DIR$/datasets/2022_data/Detroit-2022.csv" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/2022_data/Seattle-2022.csv" beforeDir="false" afterPath="$PROJECT_DIR$/datasets/2022_data/Seattle-2022.csv" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/baltimore_parser.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/charlotte_parser.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/city_csv_data/.gitkeep" beforeDir="false" afterPath="$PROJECT_DIR$/datasets/city_csv_data/.gitkeep" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/city_csv_data/Austin-2020.csv" beforeDir="false" afterPath="$PROJECT_DIR$/datasets/city_csv_data/Austin-2020.csv" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/city_csv_data/Austin-2021.csv" beforeDir="false" afterPath="$PROJECT_DIR$/datasets/city_csv_data/Austin-2021.csv" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/city_csv_data/Baltimore-2020.csv" beforeDir="false" afterPath="$PROJECT_DIR$/datasets/city_csv_data/Baltimore-2020.csv" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/city_csv_data/Baltimore-2021.csv" beforeDir="false" afterPath="$PROJECT_DIR$/datasets/city_csv_data/Baltimore-2021.csv" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/city_csv_data/Boston-2020.csv" beforeDir="false" afterPath="$PROJECT_DIR$/datasets/city_csv_data/Boston-2020.csv" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/city_csv_data/Boston-2021.csv" beforeDir="false" afterPath="$PROJECT_DIR$/datasets/city_csv_data/Boston-2021.csv" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/city_csv_data/Charlotte-2020.csv" beforeDir="false" afterPath="$PROJECT_DIR$/datasets/city_csv_data/Charlotte-2020.csv" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/city_csv_data/Charlotte-2021.csv" beforeDir="false" afterPath="$PROJECT_DIR$/datasets/city_csv_data/Charlotte-2021.csv" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/city_csv_data/Chicago_2020.csv" beforeDir="false" afterPath="$PROJECT_DIR$/datasets/city_csv_data/Chicago_2020.csv" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/city_csv_data/Chicago_2021.csv" beforeDir="false" afterPath="$PROJECT_DIR$/datasets/city_csv_data/Chicago_2021.csv" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/city_csv_data/Denver-2020.csv" beforeDir="false" afterPath="$PROJECT_DIR$/datasets/city_csv_data/Denver-2020.csv" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/city_csv_data/Denver-2021.csv" beforeDir="false" afterPath="$PROJECT_DIR$/datasets/city_csv_data/Denver-2021.csv" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/city_csv_data/Detroit-2020.csv" beforeDir="false" afterPath="$PROJECT_DIR$/datasets/city_csv_data/Detroit-2020.csv" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/city_csv_data/Detroit-2021.csv" beforeDir="false" afterPath="$PROJECT_DIR$/datasets/city_csv_data/Detroit-2021.csv" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/city_csv_data/LA_2020.csv" beforeDir="false" afterPath="$PROJECT_DIR$/datasets/city_csv_data/LA_2020.csv" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/city_csv_data/LA_2021.csv" beforeDir="false" afterPath="$PROJECT_DIR$/datasets/city_csv_data/LA_2021.csv" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/city_csv_data/New York City-2020.csv" beforeDir="false" afterPath="$PROJECT_DIR$/datasets/city_csv_data/New York City-2020.csv" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/city_csv_data/New York City-2021.csv" beforeDir="false" afterPath="$PROJECT_DIR$/datasets/city_csv_data/New York City-2021.csv" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/city_csv_data/Philadelphia-2020.csv" beforeDir="false" afterPath="$PROJECT_DIR$/datasets/city_csv_data/Philadelphia-2020.csv" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/city_csv_data/Philadelphia-2021.csv" beforeDir="false" afterPath="$PROJECT_DIR$/datasets/city_csv_data/Philadelphia-2021.csv" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/city_csv_data/Seattle-2020.csv" beforeDir="false" afterPath="$PROJECT_DIR$/datasets/city_csv_data/Seattle-2020.csv" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/city_csv_data/Seattle-2021.csv" beforeDir="false" afterPath="$PROJECT_DIR$/datasets/city_csv_data/Seattle-2021.csv" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/city_csv_data/WashingtonDC-2020.csv" beforeDir="false" afterPath="$PROJECT_DIR$/datasets/city_csv_data/WashingtonDC-2020.csv" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/city_csv_data/WashingtonDC-2021.csv" beforeDir="false" afterPath="$PROJECT_DIR$/datasets/city_csv_data/WashingtonDC-2021.csv" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/combine_csv.py" beforeDir="false" afterPath="$PROJECT_DIR$/combine_csv.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dc_parser.py" beforeDir="false" afterPath="$PROJECT_DIR$/api_calls/dc_parser.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/fbi_api.py" beforeDir="false" afterPath="$PROJECT_DIR$/api_calls/fbi_api.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/philadelphia_parser.py" beforeDir="false" afterPath="$PROJECT_DIR$/api_calls/philadelphia_parser.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/phoenix_api.py" beforeDir="false" afterPath="$PROJECT_DIR$/api_calls/phoenix_api.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/socrata_api_call.py" beforeDir="false" afterPath="$PROJECT_DIR$/api_calls/socrata_api.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
