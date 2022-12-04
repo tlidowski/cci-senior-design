@@ -13,7 +13,7 @@ function createTable() {
     city.innerText="City"
 
     let state = document.createElement("th");
-    state.setAttribute("data-field", "STATE");
+    state.setAttribute("data-field", "STATE_NAME");
     state.innerText="State"
 
     let code = document.createElement("th");
@@ -62,14 +62,16 @@ pull.addEventListener("click", function () {
     .then((response) => {
         return response.json(); })
   .then((data) => {
-      console.log(data)
-      while (table_parent.firstChild) {
-        table_parent.removeChild(table_parent.firstChild);
-      }
-      let tableElement = createTable();
-      table_parent.append(tableElement);
+      $(document).ready(function () {
+          console.log(data)
+          while (table_parent.firstChild) {
+            table_parent.removeChild(table_parent.firstChild);
+          }
+          let tableElement = createTable();
+          table_parent.append(tableElement);
 
-      let table = document.getElementById("table");
-      $(table).bootstrapTable(data);
+          let table = document.getElementById("table");
+          $('table').bootstrapTable({ data: data.slice(0, 51) });
+      });
   });
 });

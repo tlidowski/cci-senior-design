@@ -6,6 +6,7 @@
   <component name="ChangeListManager">
     <list default="true" id="8191229b-13e5-45f5-8555-fd13acb5506e" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/crime_eye/static/loadData.js" beforeDir="false" afterPath="$PROJECT_DIR$/crime_eye/static/loadData.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/crime_eye/templates/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/crime_eye/templates/index.html" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -113,6 +114,11 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
+    <list>
+      <item itemvalue="Python.app" />
+      <item itemvalue="Python.app_route" />
+      <item itemvalue="Python.main" />
+    </list>
     <recent_temporary>
       <list>
         <item itemvalue="Python.app_route" />
