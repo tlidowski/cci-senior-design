@@ -12,8 +12,9 @@
     <script src="https://unpkg.com/bootstrap-table@1.18.0/dist/bootstrap-table.min.js"></script>
     <link href="https://api.mapbox.com/mapbox-gl-js/v2.11.0/mapbox-gl.css" rel="stylesheet">
     <script src="https://api.mapbox.com/mapbox-gl-js/v2.11.0/mapbox-gl.js"></script>
+    <script src='https://cdn.plot.ly/plotly-2.18.2.min.js'></script>
     <style>
-        #map { position:relative; top:0; bottom:0; width:100%; height: 500px; transition: all 0.3s; }
+        .mapType { position:relative; top:0; bottom:0; width:100%; height: 500px; transition: all 0.3s; }
     </style>
 </head>
 <body>
@@ -85,6 +86,10 @@
                                     data-bs-target="#nav-graph" type="button" role="tab" aria-controls="nav-graph"
                                     aria-selected="false">Graph
                             </button>
+                            <button class="nav-link" id="nav-map-tab" data-bs-toggle="tab"
+                            data-bs-target="#nav-map" type="button" role="tab" aria-controls="nav-map"
+                            aria-selected="false">Map
+                            </button>
                         </div>
                     </nav>
                 </div>
@@ -97,7 +102,10 @@
                             </div>
                         </div>
                         <div class="tab-pane fade" id="nav-graph" role="tabpanel" aria-labelledby="nav-graph-tab">
-                            <div id="map"></div>
+                            <div id="map" class="mapType"></div>
+                        </div>
+                        <div class="tab-pane fade" id="nav-map" role="tabpanel" aria-labelledby="nav-map-tab">
+                            <div id="mapChart" class="mapType"></div>
                         </div>
                     </div>
                 </div>
@@ -106,5 +114,7 @@
     </div>
 </div>
 <script src="{{ url_for('static', filename='loadData.js') }}"></script>
+<script src="{{ url_for('static', filename='mapChart.js') }}"></script>
+
 </body>
 </html>

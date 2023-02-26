@@ -4,11 +4,14 @@ let pull = document.getElementById("pull")
 let mapTab = document.getElementById("nav-graph-tab")
 let dataChanged = false
 let geoData = {"type": "FeatureCollection", "features": []};
+let mapChart; 
 
 mapTab.addEventListener('shown.bs.tab', function () {
     map.resize()
 })
 
+// Should probably be separated into its own class 
+// [Will prob be removed/revised anyway]
 mapboxgl.accessToken = 'pk.eyJ1Ijoic3JhODQiLCJhIjoiY2w4ZjNmcXk4MDllbDQwbnpoOXJwa2VsZSJ9.OsLldCR-T9CjYaBE5Fa4OA';
 const map = new mapboxgl.Map({
     container: 'map',
@@ -158,7 +161,33 @@ pull.addEventListener("click", function () {
 
                 let table = document.getElementById("table");
                 $('table').bootstrapTable({data: data.slice(0, 51)});
-                dataChanged = true
+
+                dataChanged = true // Trigger for heatmap
             });
         });
 });
+
+// For radius chart 
+pull.addEventListener("click", function () {
+    let city = document.getElementById("city").value
+    let start = document.getElementById("start").value
+    let end = document.getElementById("end").value
+    let radius = mapChart.getRadius();
+    fetch(`http://127.0.0.1:5000/crimes_in_radius?city=${city}&start=${start}&end=${end}&radius=${radius}`)
+        .then((response) => {
+            return response.json();
+        })
+        .then((data) => {
+            $(document).ready(function () {
+                // let cityCenter = [-71.0589, 42.3601] // TODO Get based on user input
+                mapChart.sendData(data.coords, data.center); // TODO Change to more 
+            });
+        });
+});
+
+window.addEventListener("load", ()=>{
+    // Initialize map
+    mapChart = new MapChart("mapChart");
+
+
+})
