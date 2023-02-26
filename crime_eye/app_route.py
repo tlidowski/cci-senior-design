@@ -4,6 +4,7 @@ import numpy as np
 from flask import Flask, render_template, jsonify, request
 import requests
 import pandas as pd
+from math import radians, cos, sin, asin, sqrt
 
 app = Flask(__name__)
 
@@ -29,7 +30,41 @@ def get_column_types():
     }
     return column_types
 
+def get_lat_lon(df):
+    lats = df['LATITUDE']
+    lons = df["LONGITUDE"]
+    return lats.tolist(), lons.tolist()
 
+# https://stackoverflow.com/questions/4913349/haversine-formula-in-python-bearing-and-distance-between-two-gps-points
+def haversine(lon1, lat1, lon2, lat2):
+    """
+    Calculate the great circle distance in kilometers between two points 
+    on the earth (specified in decimal degrees)
+    """
+    # convert decimal degrees to radians 
+    lon1, lat1, lon2, lat2 = map(radians, [lon1, lat1, lon2, lat2])
+
+    # haversine formula 
+    dlon = lon2 - lon1 
+    dlat = lat2 - lat1 
+    a = sin(dlat/2)**2 + cos(lat1) * cos(lat2) * sin(dlon/2)**2
+    c = 2 * asin(sqrt(a)) 
+    r = 3956 # Radius of earth in Miles. Use 3956 for miles.
+    return c * r
+
+def get_location_from_name(city):
+    # Lon, Lat
+    nameMap = {
+        "boston": [-71.0589, 42.3601,],
+    }
+    try:
+        return nameMap[city.lower()]
+    except:
+        return [None, None]
+    
+
+
+# Only works if server is run in the crimeeye folder: python3
 @app.route('/city_crime_data', methods=['GET'])
 def get_city_crime_data():
     city = request.args.get('city')
@@ -37,7 +72,7 @@ def get_city_crime_data():
     end = request.args.get('end')
 
     try:
-        res_json = None
+        output = None
         path_2020 = f'../combined_city_data/city_data-{2020}.csv'
         path_2021 = f'../combined_city_data/city_data-{2021}.csv'
 
@@ -50,22 +85,32 @@ def get_city_crime_data():
         if (start in year_csvs.keys()) and (end in year_csvs.keys()):
             start_year_df = pd.read_csv(year_csvs[start], dtype=column_types)
             start_year_res = apply_mask(start_year_df, 'CITY_NAME', city)
-
+            start_lats, start_lons = get_lat_lon(start_year_res)
             end_year_df = []
             end_year_res = []
 
             if start != end:
                 end_year_df = pd.read_csv(year_csvs[end], dtype=column_types)
                 end_year_res = apply_mask(end_year_df, 'CITY_NAME', city)
+                end_lats, end_lons = get_lat_lon(start_year_res)
+
+
 
             # res = None
             if len(end_year_res) != 0:
                 res = pd.concat([start_year_res, end_year_res], axis=0)
+                lats = start_lats + end_lats
+                lons = start_lons + end_lons
+
             else:
                 res = start_year_res
-            res_json = res.to_json(orient='records')
-        return res_json
-    except:
+                lats = start_lats
+                lons = start_lons
+
+            
+        return res.to_json(orient='records')
+    except Exception as e:
+        print(e)
         return {}
 
 
@@ -111,6 +156,59 @@ def get_city_geo_data():
         print("Failure")
         return {}
 
+@app.route('/crimes_in_radius', methods=['GET'])
+def get_locations_given_radius():
+    city = request.args.get('city')
+    start = request.args.get('start')
+    end = request.args.get('end')
+    radius = int(request.args.get('radius'))
+    try:
+        path_2020 = f'../combined_city_data/city_data-{2020}.csv'
+        path_2021 = f'../combined_city_data/city_data-{2021}.csv'
+
+        year_csvs = {"2020": path_2020,
+                     "2021": path_2021
+                     }
+
+        column_types = get_column_types()
+
+        if (start in year_csvs.keys()) and (end in year_csvs.keys()):
+            start_year_df = pd.read_csv(year_csvs[start], dtype=column_types)
+            start_year_res = apply_mask(start_year_df, 'CITY_NAME', city)
+
+            end_year_df = []
+            end_year_res = []
+
+            if start != end:
+                end_year_df = pd.read_csv(year_csvs[end], dtype=column_types)
+                end_year_res = apply_mask(end_year_df, 'CITY_NAME', city)
+
+            # res = None
+            if len(end_year_res) != 0:
+                res = pd.concat([start_year_res, end_year_res], axis=0)
+            else:
+                res = start_year_res
+            cityLocation = get_location_from_name(city)
+            coords = {
+                "inside": [],
+                "outside": []
+            }
+            for i, row in res.iterrows():
+                if not (np.isnan(row["LONGITUDE"]) and np.isnan(row["LATITUDE"])):
+                    # return 2 separate lists of latitudes and longitudes based off whether they are within the radius
+                    lat = row["LATITUDE"]
+                    lon = row["LONGITUDE"]
+                    if haversine(cityLocation[0], cityLocation[1], lon, lat) <= radius:
+                        coords["inside"].append((lon, lat))
+                    else:
+                        coords["outside"].append((lon, lat))
+        return json.dumps({
+            "center": cityLocation,
+            "coords":coords
+        })
+    except Exception as e:
+        print(f'Faliure: {e}')
+        return {}
 
 @app.route('/')
 def index():
