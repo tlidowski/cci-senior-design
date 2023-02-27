@@ -191,3 +191,29 @@ window.addEventListener("load", ()=>{
 
 
 })
+
+// pie graph
+pull.addEventListener("click", function () {
+    let city = document.getElementById("city").value
+    let start = document.getElementById("start").value
+    let end = document.getElementById("end").value
+    fetch(`http://127.0.0.1:5000/crimes_pie_chart?city=${city}&start=${start}&end=${end}`)
+        .then((response) => {
+            return response.json();
+        })
+        .then((data) => {
+            $(document).ready(function (){
+                console.log(data.counts);
+                var pieChart_data = [{
+                    type: "pie",
+                    values: data.counts,
+                    labels: data.crimes
+                }];
+                var layout = {
+                    height: 800,
+                    width: 800
+                  };
+                Plotly.newPlot('pieChart',pieChart_data, layout);
+            })
+        })
+})
