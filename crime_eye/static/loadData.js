@@ -15,6 +15,7 @@ document.getElementById("nav-map-tab").addEventListener('shown.bs.tab', function
 })
 
 
+
 // Should probably be separated into its own class 
 // [Will prob be removed/revised anyway]
 mapboxgl.accessToken = 'pk.eyJ1Ijoic3JhODQiLCJhIjoiY2w4ZjNmcXk4MDllbDQwbnpoOXJwa2VsZSJ9.OsLldCR-T9CjYaBE5Fa4OA';
@@ -211,15 +212,10 @@ function getDataFromAddress(data){
             //     mapChart.sendData(data.coords, data.center); // TODO Change to more 
             // });
             console.log(res)
+            mapChart.sendData(res.coords, res.center);
         });
 }
 
-window.addEventListener("load", ()=>{
-    // Initialize map
-    mapChart = new MapChart("mapChart");
-
-
-})
 
 // pie graph
 pull.addEventListener("click", function () {
@@ -245,4 +241,16 @@ pull.addEventListener("click", function () {
                 Plotly.newPlot('pieChart',pieChart_data, layout);
             })
         })
+})
+
+window.addEventListener("load", ()=>{
+    // Initialize map
+    console.log("InITIALIZE")
+    mapChart = new MapChart("mapChart");
+    let slider = document.getElementById("radRange");
+    console.log(slider)
+    slider.onclick =  function (){
+        mapChart.setRadius(slider.value);
+    };
+
 })

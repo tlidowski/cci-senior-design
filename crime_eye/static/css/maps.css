@@ -40,3 +40,21 @@ font-size: 16px;
     /*when hovering an item:*/
     background-color: rgba(0, 0, 0, 0.1);
   }
+  /* For Slider */
+  datalist {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    writing-mode: horizontal-tb;
+    width: 200px;
+  }
+  
+  option {
+    padding: 0;
+  }
+  
+  input[type="range"] {
+    width: 200px;
+    margin: 0;
+  }
+  

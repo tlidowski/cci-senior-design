@@ -3,6 +3,7 @@ VALID_YEARS = [2020, 2021]
 # Needs to be lowercase
 VALID_CITIES = [
 'philadelphia',
+'new york',
 'new york city',
 'los angelos',
 'chicago',

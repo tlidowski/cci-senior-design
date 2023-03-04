@@ -259,7 +259,14 @@ def get_pie_chart():
 # Using AWS
 @app.route('/crimes_from_address', methods=['GET'])
 def get_locations_given_address():
+    cityMap = {
+        "new york":"New York City"
+    }
     cityName = request.args.get('cityName')
+    if cityName.lower() in cityMap.keys():
+        cityName = cityMap[cityName.lower()]
+    # City name can be different than our database
+
     start = request.args.get('start')
     end = request.args.get('end')
     radius = int(request.args.get('radius'))
@@ -281,10 +288,24 @@ def get_locations_given_address():
     engine = aws.initConnection()
     res = aws.getCityData(cityName, engine)
     engine.close()
-    print(res)
+    coords = {
+        "inside": [],
+        "outside": []
+    }
+    for i, row in res.iterrows():
+        if not (np.isnan(row["longitude"]) and np.isnan(row["latitude"])):
+            # return 2 separate lists of latitudes and longitudes based off whether they are within the radius
+            lat = row["latitude"]
+            lon = row["longitude"]
+            if haversine(userLon, userLat, lon, lat) <= radius:
+                coords["inside"].append((lon, lat))
+            else:
+                coords["outside"].append((lon, lat))
 
+    # Todo, generate list based on crime type as well as (or instead of) within radius
     return json.dumps({
-
+        "center": [userLon, userLat],
+        "coords":coords
     })
     
 @app.route('/')
