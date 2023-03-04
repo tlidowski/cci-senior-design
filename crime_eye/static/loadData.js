@@ -6,9 +6,14 @@ let dataChanged = false
 let geoData = {"type": "FeatureCollection", "features": []};
 let mapChart; 
 
+// Makes mapbox canvas resize when tab is selected
 mapTab.addEventListener('shown.bs.tab', function () {
     map.resize()
 })
+document.getElementById("nav-map-tab").addEventListener('shown.bs.tab', function () {
+    mapChart.map.resize()
+})
+
 
 // Should probably be separated into its own class 
 // [Will prob be removed/revised anyway]
@@ -185,6 +190,30 @@ pull.addEventListener("click", function () {
         });
 });
 
+
+// Takes in location from Geoapify address and will send data to mapchart
+function getDataFromAddress(data){
+    let start = document.getElementById("start").value
+    let end = document.getElementById("end").value
+    let radius = mapChart.getRadius();
+    let cityName = data.city
+    let lat = data.lat
+    let lon = data.lon
+    
+    // Assuming validation on server
+    fetch(`http://127.0.0.1:5000/crimes_from_address?cityName=${cityName}&start=${start}&end=${end}&radius=${radius}&lat=${lat}&lon=${lon}`)
+        .then((response) => {
+            return response.json();
+        })
+        .then((res) => {
+            // $(document).ready(function () {
+            //     // let cityCenter = [-71.0589, 42.3601] // TODO Get based on user input
+            //     mapChart.sendData(data.coords, data.center); // TODO Change to more 
+            // });
+            console.log(res)
+        });
+}
+
 window.addEventListener("load", ()=>{
     // Initialize map
     mapChart = new MapChart("mapChart");
@@ -203,7 +232,7 @@ pull.addEventListener("click", function () {
         })
         .then((data) => {
             $(document).ready(function (){
-                console.log(data.counts);
+                // console.log(data.counts);
                 var pieChart_data = [{
                     type: "pie",
                     values: data.counts,

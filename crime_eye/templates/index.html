@@ -13,9 +13,7 @@
     <link href="https://api.mapbox.com/mapbox-gl-js/v2.11.0/mapbox-gl.css" rel="stylesheet">
     <script src="https://api.mapbox.com/mapbox-gl-js/v2.11.0/mapbox-gl.js"></script>
     <script src='https://cdn.plot.ly/plotly-2.18.2.min.js'></script>
-    <style>
-        .mapType { position:relative; top:0; bottom:0; width:100%; height: 500px; transition: all 0.3s; }
-    </style>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/maps.css') }}">
 </head>
 <body>
 <div class="container">
@@ -70,6 +68,9 @@
                             <button class="btn btn-outline-dark" id="pull">Search</button>
                         </div>
                     </div>
+                    <div class ="row">
+                        <div class="autocomplete-container" id="autocomplete-container"></div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -122,6 +123,8 @@
 </div>
 <script src="{{ url_for('static', filename='loadData.js') }}"></script>
 <script src="{{ url_for('static', filename='mapChart.js') }}"></script>
+<script src="{{ url_for('static', filename='addressLookup.js') }}"></script>
+
 
 </body>
 </html>
