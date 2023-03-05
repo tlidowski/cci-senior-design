@@ -5,11 +5,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="8191229b-13e5-45f5-8555-fd13acb5506e" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/crime_eye/css/styles.css" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/crime_eye/static/crimeScore.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/crime_eye/static/mapChart.js" beforeDir="false" afterPath="$PROJECT_DIR$/crime_eye/static/mapChart.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/crime_eye/css/styles.css" beforeDir="false" afterPath="$PROJECT_DIR$/crime_eye/css/styles.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/crime_eye/static/crimeScore.js" beforeDir="false" afterPath="$PROJECT_DIR$/crime_eye/static/crimeScore.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/crime_eye/templates/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/crime_eye/templates/index.html" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />

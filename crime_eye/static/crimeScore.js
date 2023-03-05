@@ -1,22 +1,20 @@
-static veryUnsafeThreshold = 2;
-static veryUnsafeScore = 1;
+let veryUnsafeThreshold = 2;
+let veryUnsafeScore = 1;
 
-static unsafeThreshold = 1;
-static unsafeScore = 2;
+let unsafeThreshold = 1;
+let unsafeScore = 2;
 
-static okThreshold=0.5;
-static okScore = 3;
+let okThreshold=0.5;
+let okScore = 3;
 
-static safeThreshold = 0.25;
-static safeScore = 4;
+let safeThreshold = 0.25;
+let safeScore = 4;
 
-static reallySafeScore = 5;
+let reallySafeScore = 5;
+//
+//let pull = document.getElementById("pull");
+//
 
-let pull = document.getElementById("pull")
-
-pull.addEventListener("click", function () {
-
-}
 
 
 function getAreaOfCircle(radius) {
@@ -24,9 +22,9 @@ function getAreaOfCircle(radius) {
 }
 
 
-//TODO:
+//TODO
 function getRecordsInCircle(lat, long, area_of_circle, allRecords) {
-    return 1;
+    return 60;
 }
 
 function getSQOfCity(city) {
@@ -57,12 +55,12 @@ function getTotalCrimes(city) {
 //(we are letting user choose a radius, i can use whatever values, they will come from micah. use mock radii)
 
 
-function getCrimeScore(lat, long, radius): {
+function getCrimeScore(lat, long, radius) {
     let city = document.getElementById("city").value;
 
     let area_of_circle = getAreaOfCircle(radius);
 
-    //TODO:
+    //TODO
     let SQ_of_city = getSQOfCity(city);
     let total_crimes = getTotalCrimes(city);
     //
@@ -70,7 +68,7 @@ function getCrimeScore(lat, long, radius): {
     let N = (area_of_circle) * (total_crimes)/SQ_of_city;
     let crimeScore = 0;
 
-    //TODO:
+    //TODO
     let allRecords = [];
     let records_in_circle = getRecordsInCircle(lat, long, area_of_circle, allRecords);
 
@@ -98,7 +96,30 @@ function getCrimeScore(lat, long, radius): {
 
 function renderBox(lat, long, radius) {
     let crimeScore = getCrimeScore(lat, long, radius);
-    let crimeScoreBox = document.getElementById("crimeScoreBox");
+    let crimeScoreBox = document.getElementById("crime-score-box");
+    print("AT RENDER BOX:", crimeScore, crimeScoreBox);
     crimeScoreBox.innerHTML = crimeScore;
     //let box = '<div id="crimeScoreBox" value="">${crimeScore}</div>';
 }
+
+function getEnteredInfo() {
+    let city = document.getElementById("city").value
+    let start = document.getElementById("start").value
+    let end = document.getElementById("end").value
+    let radius = mapChart.getRadius();
+    let infoDict = {
+                    "city": city,
+                    "start": start,
+                    "end": end,
+                    "radius": radius
+    }
+    return infoDict;
+}
+
+pull.addEventListener("click", function () {
+    let infoDict = getEnteredInfo();
+    let lat = 1000;
+    let long = 1000;
+    let radius = infoDict["radius"];
+    renderBox(lat, long, radius)
+})
