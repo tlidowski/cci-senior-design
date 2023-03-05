@@ -115,7 +115,9 @@ class MapChart{
                 "paint": {
                     "circle-color": "red",
                     "circle-opacity": 0.2
-                    }
+                    },
+                "icon-allow-overlap":true, 
+                "text-allow-overlap":true,
                 });
         }
 
