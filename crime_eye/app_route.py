@@ -5,8 +5,10 @@ from flask import Flask, render_template, jsonify, request
 import requests
 import pandas as pd
 from math import radians, cos, sin, asin, sqrt
-
+import validation as v
+import aws_connection as aws
 app = Flask(__name__)
+engine = None
 
 
 def apply_mask(df, column_name, value):
@@ -209,7 +211,7 @@ def get_locations_given_radius():
     except Exception as e:
         print(f'Faliure: {e}')
         return {}
-
+    
 @app.route('/crimes_pie_chart', methods=['GET'])
 def get_pie_chart():
     city = request.args.get('city')
@@ -300,10 +302,64 @@ def get_line_graph():
         print(f'Failure: {e}')
         return {}
     
+# Using AWS
+@app.route('/crimes_from_address', methods=['GET'])
+def get_locations_given_address():
+    cityMap = {
+        "new york":"New York City"
+    }
+    cityName = request.args.get('cityName')
+    if cityName.lower() in cityMap.keys():
+        cityName = cityMap[cityName.lower()]
+    # City name can be different than our database
+
+    start = request.args.get('start')
+    end = request.args.get('end')
+    radius = int(request.args.get('radius'))
+    userLat = float(request.args.get('lat'))
+    userLon = float(request.args.get('lon'))
+
+
+    # if engine == None:
+    #     print("SERVER ERROR")
+
+    if not v.validateYears(start, end):
+        return json.dumps(
+            {"errors":["Invalid Years"]}
+        )
+    if not v.validateCity(cityName):
+        return json.dumps(
+            {"errors":["No crime data for given city"]}
+        )
+    engine = aws.initConnection()
+    res = aws.getCityData(cityName, engine)
+    engine.close()
+    coords = {
+        "inside": [],
+        "outside": []
+    }
+    for i, row in res.iterrows():
+        if not (np.isnan(row["longitude"]) and np.isnan(row["latitude"])):
+            # return 2 separate lists of latitudes and longitudes based off whether they are within the radius
+            lat = row["latitude"]
+            lon = row["longitude"]
+            if haversine(userLon, userLat, lon, lat) <= radius:
+                coords["inside"].append((lon, lat))
+            else:
+                coords["outside"].append((lon, lat))
+
+    # Todo, generate list based on crime type as well as (or instead of) within radius
+    return json.dumps({
+        "center": [userLon, userLat],
+        "coords":coords
+    })
+    
 @app.route('/')
 def index():
     return render_template("index.html")
 
 
 if __name__ == '__main__':
-    app.run()
+    
+    app.run(host='0.0.0.0', debug=True, port=5000)
+

@@ -15,9 +15,7 @@
     <link href="https://api.mapbox.com/mapbox-gl-js/v2.11.0/mapbox-gl.css" rel="stylesheet">
     <script src="https://api.mapbox.com/mapbox-gl-js/v2.11.0/mapbox-gl.js"></script>
     <script src='https://cdn.plot.ly/plotly-2.18.2.min.js'></script>
-    <style>
-        .mapType { position:relative; top:0; bottom:0; width:100%; height: 500px; transition: all 0.3s; }
-    </style>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/maps.css') }}">
 </head>
 <body>
 <div class="container">
@@ -124,7 +122,15 @@
                             <div id="map" class="mapType"></div>
                         </div>
                         <div class="tab-pane fade" id="nav-map" role="tabpanel" aria-labelledby="nav-map-tab">
+                            <div class="autocomplete-container" id="autocomplete-container"></div>
                             <div id="mapChart" class="mapType"></div>
+                            <label for="radRange" class="form-label">Radius</label><br>
+                            <input type="range" name="radRange" class="form-range" id="radRange" min="1" max="5" step="1">
+                            <datalist id="radRange">
+                                <option value="1" label="1"></option>
+                                <option value="3" label="3"></option>
+                                <option value="5" label="5"></option>
+                            </datalist>
                         </div>
                         <div class="tab-pane fade" id="nav-pie-chart" role="tabpanel" aria-labelledby="nav-pie-chart-tab">
                             <div id="pieChart"></div>
@@ -142,6 +148,8 @@
 <script src="{{ url_for('static', filename='loadData.js') }}"></script>
 <script src="{{ url_for('static', filename='mapChart.js') }}"></script>
 <script src="{{ url_for('static', filename='crimeScore.js') }}"></script>
+<script src="{{ url_for('static', filename='addressLookup.js') }}"></script>
+
 
 </body>
 </html>
