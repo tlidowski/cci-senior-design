@@ -161,7 +161,7 @@ class MapChart{
         // Should prob also be done on server
         let inAmount = this.inFeatures.length;
         let outAmount = this.outFeatures.length;
-        let percent = ((inAmount / (inAmount + outAmout)) * 100).toFixed(2);
+        let percent = ((inAmount / (inAmount + outAmount)) * 100).toFixed(2);
         console.log(`% Inside ${this.radius}-Mile Radius  = ${percent}%`);
     }
     // https://stackoverflow.com/questions/37599561/drawing-a-circle-with-the-radius-in-miles-meters-with-mapbox-gl-js
