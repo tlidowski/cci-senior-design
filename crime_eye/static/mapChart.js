@@ -158,7 +158,7 @@ class MapChart{
     printResults(){
         // Should prob also be done on server
         let inAmount = this.inFeatures.length;
-        let outAmout = this.outFeatures.length;
+        let outAmount = this.outFeatures.length;
         let percent = ((inAmount / (inAmount + outAmout)) * 100).toFixed(2);
         console.log(`% Inside ${this.radius}-Mile Radius  = ${percent}%`);
     }

@@ -5,6 +5,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="8191229b-13e5-45f5-8555-fd13acb5506e" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/crime_eye/css/styles.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/crime_eye/static/crimeScore.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/crime_eye/static/mapChart.js" beforeDir="false" afterPath="$PROJECT_DIR$/crime_eye/static/mapChart.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/crime_eye/templates/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/crime_eye/templates/index.html" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -91,6 +96,27 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
+    <configuration name="aws_testing" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="senior-design-scratch" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="C:\Users\amcad\AppData\Local\Programs\Python\Python39\python.exe" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/PostgreSQL" />
+      <option name="IS_MODULE_SDK" value="false" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/PostgreSQL/aws_testing.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
     <configuration name="main" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="senior-design-scratch" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -113,6 +139,7 @@
       <method v="2" />
     </configuration>
     <list>
+      <item itemvalue="Python.aws_testing" />
       <item itemvalue="Python.app" />
       <item itemvalue="Python.app_route" />
       <item itemvalue="Python.main" />
@@ -120,6 +147,7 @@
     <recent_temporary>
       <list>
         <item itemvalue="Python.app_route" />
+        <item itemvalue="Python.aws_testing" />
         <item itemvalue="Python.app" />
         <item itemvalue="Python.main" />
       </list>

@@ -28,6 +28,7 @@
 
     <div class="row">
         <div class="col-4">
+
             <div class="card">
                 <div class="card-header">
                     Search Criteria
@@ -72,6 +73,7 @@
                     </div>
                 </div>
             </div>
+            <div class="card" id="crime-score">HELLO</div>
         </div>
         <div class="col-8">
             <div class="card">
@@ -97,6 +99,7 @@
                         </div>
                     </nav>
                 </div>
+
                 <div class="card-body">
                     <div class="tab-content" id="nav-tabContent">
                         <div class="tab-pane fade show active" id="nav-table" role="tabpanel"
@@ -114,14 +117,17 @@
                         <div class="tab-pane fade" id="nav-pie-chart" role="tabpanel" aria-labelledby="nav-pie-chart-tab">
                             <div id="pieChart"></div>
                         </div>
+
                     </div>
                 </div>
+
             </div>
         </div>
     </div>
 </div>
 <script src="{{ url_for('static', filename='loadData.js') }}"></script>
 <script src="{{ url_for('static', filename='mapChart.js') }}"></script>
+<script src="{{ url_for('static', filename='crimeScore.js') }}"></script>
 
 </body>
 </html>
