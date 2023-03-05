@@ -243,6 +243,40 @@ pull.addEventListener("click", function () {
         })
 })
 
+// line graph
+pull.addEventListener("click", function () {
+    let city = document.getElementById("city").value
+    let start = document.getElementById("start").value
+    let end = document.getElementById("end").value
+    fetch(`http://127.0.0.1:5000/crimes_line_graph?city=${city}&start=${start}&end=${end}`)
+        .then((response) => {
+            return response.json();
+        })
+        .then((data) => {
+            $(document).ready(function (){
+                console.log(data.counts);
+                var lineGraph_data = [{
+                    type: "scatter",
+                    y: data.counts,
+                    x: data.dates
+                }];
+
+                var layout = {
+                    title: 'Crime Timeline',
+                    xaxis: {
+                        title: 'Month/Year'
+                    },
+                    yaxis: {
+                        title: 'Number of Crimes',
+                        rangemode: 'tozero'
+                    }
+                };
+
+                Plotly.newPlot('lineGraph',lineGraph_data, layout);
+            })
+        })
+})
+
 window.addEventListener("load", ()=>{
     // Initialize map
     mapChart = new MapChart("mapChart");

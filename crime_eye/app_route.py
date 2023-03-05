@@ -255,6 +255,52 @@ def get_pie_chart():
     except Exception as e:
         print(f'Faliure: {e}')
         return {}
+
+@app.route('/crimes_line_graph', methods=['GET'])
+def get_line_graph():
+    city = request.args.get('city')
+    start = request.args.get('start')
+    end = request.args.get('end')
+    try:
+        path_2020 = f'../combined_city_data/city_data-{2020}.csv'
+        path_2021 = f'../combined_city_data/city_data-{2021}.csv'
+
+        year_csvs = {"2020": path_2020,
+                     "2021": path_2021
+                     }
+
+        column_types = get_column_types()
+
+        if (start in year_csvs.keys()) and (end in year_csvs.keys()):
+            start_df = pd.read_csv(year_csvs[start], dtype=column_types)
+            start_res = apply_mask(start_df, 'CITY_NAME', city);
+
+            end_df = []
+            end_res = []
+
+
+            if start != end:
+                end_df = pd.read_csv(year_csvs[end], dtype=column_types)
+                end_res = apply_mask(end_df, 'CITY_NAME', city)
+
+            # res = None
+            if len(end_res) != 0:
+                res = pd.concat([start_res, end_res], axis=0)
+            else:
+                res = start_res
+
+            res['DATE_OCCURRED'] = pd.to_datetime(res['DATE_OCCURRED']).dt.strftime('%m/%Y')
+            crimes_counted = res['DATE_OCCURRED'].value_counts().rename_axis('dates').sort_index().reset_index(name='counts')
+            counts_filtered = crimes_counted[crimes_counted['counts'] > 0]
+
+            # print(counts_filtered['counts'])
+            return json.dumps({
+                "counts": counts_filtered['counts'].to_list(),
+                "dates": counts_filtered['dates'].to_list()
+            })
+    except Exception as e:
+        print(f'Failure: {e}')
+        return {}
     
 # Using AWS
 @app.route('/crimes_from_address', methods=['GET'])
