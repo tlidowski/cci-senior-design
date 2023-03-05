@@ -211,7 +211,7 @@ function getDataFromAddress(data){
             //     // let cityCenter = [-71.0589, 42.3601] // TODO Get based on user input
             //     mapChart.sendData(data.coords, data.center); // TODO Change to more 
             // });
-            console.log(res)
+            // console.log(res)
             mapChart.sendData(res.coords, res.center);
         });
 }
@@ -279,10 +279,8 @@ pull.addEventListener("click", function () {
 
 window.addEventListener("load", ()=>{
     // Initialize map
-    console.log("InITIALIZE")
     mapChart = new MapChart("mapChart");
     let slider = document.getElementById("radRange");
-    console.log(slider)
     slider.onclick =  function (){
         mapChart.setRadius(slider.value);
     };
