@@ -216,16 +216,53 @@ def get_locations_given_radius():
 def get_pie_chart():
     # pie chart using crime codes 
     # TODO: group crime codes into categories provided by prof
+    crime_descriptions = {
+        'Arson'                  : ['200'],
+        'Assault'                : ['13', '13A', '13B', '13C'],
+        'Bribery'                : ['510'],
+        'Burglary'               : ['220'],
+        'Counterfeiting/Forgery' : ['250'],
+        'Vandalism of Property'  : ['290'],
+        'Drug/Narcotic Offenses' : ['35', '35A', '35B'],
+        'Embezzlement'           : ['270'],
+        'Extortion/Blackmail'    : ['210'],
+        'Fraud Offenses'         : ['26', '26A','26B', '26C', '26D', '26E'],
+        'Gambling Offenses'      : ['39', '39A', '39B', '39C', '39D'],
+        'Homicide'               : ['09', '09A', '09B', '09C'],
+        'Kidnapping/Abduction'   : ['100'],
+        'Larceny-Theft'          : ['23','23A','23B','23C','23D','23E','23F','23G','23H'],
+        'Vehicle-Theft'          : ['240'],
+        'Pornography'            : ['370'],
+        'Prostitution'           : ['40', '40A', '40B'],
+        'Armed Robbery'          : ['120'],
+        'Sex Offenses, Forcible' : ['11', '11A', '11B', '11C', '11D'], 
+        'Sex Offenses, Nonforcible':['36A', '36B'],
+        'Stolen Property Offenses' : ['280'],
+        'Weapon Law Violations'    : ['520'],
+        'Other'                    : ['90', '90A', '90B', '90C', '90D', '90E', '90F', '90G', '90H', '90I', '90J', '90Z']
+    }
+
     city = request.args.get('city')
     start = request.args.get('start')
     end = request.args.get('end')
     try:
         engine = aws.initConnection()
         res= aws.get_crime_descriptions_and_counts(city, engine)
+        crimes_and_counts = {
+        }
+
+        for crime_codes, count in zip(res['fbi_crime_code'], res['crime_count']):
+            for crime_code in crime_codes:
+                for key, values in zip(crime_descriptions.keys(), crime_descriptions.values()):
+                    if crime_code in values:
+                        if key in crimes_and_counts.keys():
+                            crimes_and_counts[key] += count
+                        else:
+                            crimes_and_counts[key] = count
 
         return json.dumps({
-            "counts": res['crime_count'].to_list(),
-            "crimes": res['fbi_crime_code'].to_list()
+            "counts": list(crimes_and_counts.values()),
+            "crimes": list(crimes_and_counts.keys())
         })
     except Exception as e:
         print(f'Faliure: {e}')
