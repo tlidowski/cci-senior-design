@@ -214,43 +214,18 @@ def get_locations_given_radius():
     
 @app.route('/crimes_pie_chart', methods=['GET'])
 def get_pie_chart():
+    # pie chart using crime codes 
+    # TODO: group crime codes into categories provided by prof
     city = request.args.get('city')
     start = request.args.get('start')
     end = request.args.get('end')
     try:
-        path_2020 = f'../combined_city_data/city_data-{2020}.csv'
-        path_2021 = f'../combined_city_data/city_data-{2021}.csv'
+        engine = aws.initConnection()
+        res= aws.get_crime_descriptions_and_counts(city, engine)
 
-        year_csvs = {"2020": path_2020,
-                     "2021": path_2021
-                     }
-
-        column_types = get_column_types()
-
-        if (start in year_csvs.keys()) and (end in year_csvs.keys()):
-            start_year_df = pd.read_csv(year_csvs[start], dtype=column_types)
-            start_year_res = apply_mask(start_year_df, 'CITY_NAME', city)
-
-            end_year_df = []
-            end_year_res = []
-
-            if start != end:
-                end_year_df = pd.read_csv(year_csvs[end], dtype=column_types)
-                end_year_res = apply_mask(end_year_df, 'CITY_NAME', city)
-
-            # res = None
-            if len(end_year_res) != 0:
-                res = pd.concat([start_year_res, end_year_res], axis=0)
-            else:
-                res = start_year_res
-        
-            crimes_counted = res['CRIME_DESCRIPTION'].value_counts().rename_axis('crimes').reset_index(name='counts')
-            counts_filtered = crimes_counted[crimes_counted['counts'] >= 1400]
-
-        print(counts_filtered['counts'])
         return json.dumps({
-            "counts": counts_filtered['counts'].to_list(),
-            "crimes": counts_filtered['crimes'].to_list()
+            "counts": res['crime_count'].to_list(),
+            "crimes": res['fbi_crime_code'].to_list()
         })
     except Exception as e:
         print(f'Faliure: {e}')

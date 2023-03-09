@@ -27,6 +27,10 @@ def getCityData(cityName, engine):
     query = 'select * from all_crime where city_name=' + "'" + cityName + "'"
     return pd.read_sql(query, con=engine)
 
+def get_crime_descriptions_and_counts (cityName, engine):
+    query = "select fbi_crime_code, count(fbi_crime_code) AS Crime_Count from all_crime where city_name = '" + cityName + "' group by fbi_crime_code"
+    return pd.read_sql(query, con=engine)
+
 
 def get_crime_descriptions(cityName, engine):
     descr_query = "select distinct crime_description from all_crime where city_name = '" + cityName + "'"
