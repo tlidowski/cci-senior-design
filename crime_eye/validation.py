@@ -18,6 +18,10 @@ VALID_CITIES = [
 ]
 
 def validateYears(start, end):
+    # Check Existance 
+    if not (start and end):
+        return False
+    
     if int(start) not in VALID_YEARS:
         return False
     if int(end) not in VALID_YEARS:

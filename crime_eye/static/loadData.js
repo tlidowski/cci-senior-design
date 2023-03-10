@@ -207,12 +207,12 @@ function getDataFromAddress(data){
             return response.json();
         })
         .then((res) => {
-            // $(document).ready(function () {
-            //     // let cityCenter = [-71.0589, 42.3601] // TODO Get based on user input
-            //     mapChart.sendData(data.coords, data.center); // TODO Change to more 
-            // });
-            // console.log(res)
-            mapChart.sendData(res.coords, res.center);
+            if(res.errors.length){
+                console.log(`Error: ${res.errors[0]}`)
+            }else{
+                
+                mapChart.sendData(res.features, res.center);
+            }
         });
 }
 

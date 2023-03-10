@@ -217,7 +217,9 @@ function addressAutocomplete(containerElement, callback, options) {
   }
   
   addressAutocomplete(document.getElementById("autocomplete-container"), (data) => {
-    getDataFromAddress(data);
+    if(data != null){
+      getDataFromAddress(data);
+    }
   }, {
     placeholder: "Enter an address here"
   });

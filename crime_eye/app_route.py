@@ -7,6 +7,7 @@ import pandas as pd
 from math import radians, cos, sin, asin, sqrt
 import validation as v
 import aws_connection as aws
+import map_processing as mp
 app = Flask(__name__)
 engine = None
 
@@ -319,10 +320,6 @@ def get_locations_given_address():
     userLat = float(request.args.get('lat'))
     userLon = float(request.args.get('lon'))
 
-
-    # if engine == None:
-    #     print("SERVER ERROR")
-
     if not v.validateYears(start, end):
         return json.dumps(
             {"errors":["Invalid Years"]}
@@ -331,27 +328,20 @@ def get_locations_given_address():
         return json.dumps(
             {"errors":["No crime data for given city"]}
         )
+    
     engine = aws.initConnection()
-    res = aws.getCityData(cityName, engine)
+    res = aws.getCityDataGivenYears(cityName, start, end, engine)
     engine.close()
-    coords = {
-        "inside": [],
-        "outside": []
-    }
-    for i, row in res.iterrows():
-        if not (np.isnan(row["longitude"]) and np.isnan(row["latitude"])):
-            # return 2 separate lists of latitudes and longitudes based off whether they are within the radius
-            lat = row["latitude"]
-            lon = row["longitude"]
-            if haversine(userLon, userLat, lon, lat) <= radius:
-                coords["inside"].append((lon, lat))
-            else:
-                coords["outside"].append((lon, lat))
-
+    crimeFeatures = mp.createFeatures(res, userLon, userLat, radius)
+    radiusFeature = mp.generateRadiusGeoJson((userLon, userLat), radius)
     # Todo, generate list based on crime type as well as (or instead of) within radius
     return json.dumps({
-        "center": [userLon, userLat],
-        "coords":coords
+        "errors":[],
+        "center": {
+            "coords" : (userLon, userLat),
+            "feature" :radiusFeature,
+        },
+        "features":crimeFeatures,
     })
     
 @app.route('/')
