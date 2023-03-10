@@ -5,6 +5,9 @@ class MapChart{
         this.inFeatures = [];
         this.outFeatures = [];
         this.radius = 3; // Units in pixels
+        // Should probably be separated into its own class
+        mapboxgl.accessToken = 'pk.eyJ1Ijoic3JhODQiLCJhIjoiY2w4ZjNmcXk4MDllbDQwbnpoOXJwa2VsZSJ9.OsLldCR-T9CjYaBE5Fa4OA';
+
         this.map = new mapboxgl.Map({
             container: 'mapChart',
             style: 'mapbox://styles/mapbox/dark-v11',
@@ -124,16 +127,8 @@ class MapChart{
             }
         )
 
-        this.printResults()
+        // Results of data should be sent from server
 
-    }
-
-    printResults(){
-        // Should prob also be done on server
-        let inAmount = this.inFeatures.length;
-        let outAmount = this.outFeatures.length;
-        let percent = ((inAmount / (inAmount + outAmount)) * 100).toFixed(2);
-        console.log(`% Inside ${this.radius}-Mile Radius  = ${percent}%`);
     }
 }
 

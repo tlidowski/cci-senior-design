@@ -173,60 +173,6 @@ def get_city_geo_data():
         print("Failure")
         return {}
 
-@app.route('/crimes_in_radius', methods=['GET'])
-def get_locations_given_radius():
-    city = request.args.get('city')
-    start = request.args.get('start')
-    end = request.args.get('end')
-    radius = int(request.args.get('radius'))
-    try:
-        path_2020 = f'../combined_city_data/city_data-{2020}.csv'
-        path_2021 = f'../combined_city_data/city_data-{2021}.csv'
-
-        year_csvs = {"2020": path_2020,
-                     "2021": path_2021
-                     }
-
-        column_types = get_column_types()
-
-        if (start in year_csvs.keys()) and (end in year_csvs.keys()):
-            start_year_df = pd.read_csv(year_csvs[start], dtype=column_types)
-            start_year_res = apply_mask(start_year_df, 'CITY_NAME', city)
-
-            end_year_df = []
-            end_year_res = []
-
-            if start != end:
-                end_year_df = pd.read_csv(year_csvs[end], dtype=column_types)
-                end_year_res = apply_mask(end_year_df, 'CITY_NAME', city)
-
-            # res = None
-            if len(end_year_res) != 0:
-                res = pd.concat([start_year_res, end_year_res], axis=0)
-            else:
-                res = start_year_res
-            cityLocation = get_location_from_name(city)
-            coords = {
-                "inside": [],
-                "outside": []
-            }
-            for i, row in res.iterrows():
-                if not (np.isnan(row["LONGITUDE"]) and np.isnan(row["LATITUDE"])):
-                    # return 2 separate lists of latitudes and longitudes based off whether they are within the radius
-                    lat = row["LATITUDE"]
-                    lon = row["LONGITUDE"]
-                    if haversine(cityLocation[0], cityLocation[1], lon, lat) <= radius:
-                        coords["inside"].append((lon, lat))
-                    else:
-                        coords["outside"].append((lon, lat))
-        return json.dumps({
-            "center": cityLocation,
-            "coords":coords
-        })
-    except Exception as e:
-        print(f'Faliure: {e}')
-        return {}
-    
 @app.route('/crimes_pie_chart', methods=['GET'])
 def get_pie_chart():
     # pie chart using crime codes 

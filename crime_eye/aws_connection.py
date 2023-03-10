@@ -12,7 +12,8 @@ def connectAWS():
     engine = psycopg2.connect(
         database=os.getenv("DATABASE_NAME"),
         user=os.getenv("DATABASE_USERNAME"),
-        password=input("Enter Password Please: "),
+        # password=input("Enter Password Please: "), # TODO REMOVE
+        password = "citycrime22",
         host=os.getenv("DATABASE_HOST"),
         port=os.getenv("DATABASE_PORT"),
     )
