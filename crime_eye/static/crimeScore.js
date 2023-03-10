@@ -58,8 +58,6 @@ function getEnteredInfo() {
 }
 
 pull.addEventListener("click", function () {
-
-
     let infoDict = getEnteredInfo();
     let lat = 1000;
     let long = 1000;

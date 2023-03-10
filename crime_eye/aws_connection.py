@@ -35,7 +35,6 @@ def getCityDataGivenYears(cityName, start, end, engine):
     start = f"'{start}0101'"
     end = f"'{end}1231'"
     query = 'select * from all_crime where city_name=' + "'" + cityName + "'" + f' AND date >= {start} and date<= {end}'
-    print(query)
     return pd.read_sql(query, con=engine)
 
 def get_crime_descriptions(cityName, engine):

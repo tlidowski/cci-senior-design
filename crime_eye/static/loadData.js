@@ -254,7 +254,7 @@ pull.addEventListener("click", function () {
         })
         .then((data) => {
             $(document).ready(function (){
-                console.log(data.counts);
+                // console.log(data.counts);
                 var lineGraph_data = [{
                     type: "scatter",
                     y: data.counts,
@@ -287,5 +287,4 @@ window.addEventListener("load", ()=>{
 
 })
 
-////////////////
 
