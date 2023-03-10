@@ -277,15 +277,15 @@ pull.addEventListener("click", function () {
         })
 })
 
-//window.addEventListener("load", ()=>{
-//    // Initialize map
-//    mapChart = new MapChart("mapChart");
-//    let slider = document.getElementById("radRange");
-//    slider.onclick =  function (){
-//        mapChart.setRadius(slider.value);
-//    };
-//
-//})
+window.addEventListener("load", ()=>{
+    // Initialize map
+    mapChart = new MapChart("mapChart");
+    let slider = document.getElementById("radRange");
+    slider.onclick =  function (){
+        mapChart.setRadius(slider.value);
+    };
+
+})
 
 ////////////////
 
