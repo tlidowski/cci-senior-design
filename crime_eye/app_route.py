@@ -1,5 +1,7 @@
 import json
 
+import math
+
 import numpy as np
 from flask import Flask, render_template, jsonify, request
 import requests
@@ -10,7 +12,19 @@ import aws_connection as aws
 app = Flask(__name__)
 engine = None
 
+veryUnsafeThreshold = 2
+veryUnsafeScore = 1
 
+unsafeThreshold = 1
+unsafeScore = 2
+
+okThreshold=0.5
+okScore = 3
+
+safeThreshold = 0.25
+safeScore = 4
+
+reallySafeScore = 5
 def apply_mask(df, column_name, value):
     mask = (df[column_name] == value)
     # apply mask to result
@@ -369,6 +383,56 @@ def get_locations_given_address():
 @app.route('/')
 def index():
     return render_template("index.html")
+
+
+def getAreaOfCircle(radius):
+    area = 0
+    try:
+        area = math.pi*(int(radius)**2)
+    except Exception as e:
+        area = math.pi*(float(radius)**2)
+    return area
+
+def getRecordsInCircle(lat, long, area_of_circle, allRecords):
+    return 60
+def getSQOfCity(city):
+    sq_of_city = 500000
+    return sq_of_city
+
+def getTotalCrimes(city):
+    total_crimes = 100
+    return total_crimes
+
+@app.route('/get_crime_score', methods=['GET'])
+def getCrimeScore():
+    city = request.args.get('city')
+    lat = request.args.get('lat')
+    long = request.args.get('long')
+    radius = request.args.get('radius')
+
+    area_of_circle = getAreaOfCircle(radius)
+    engine = aws.initConnection()
+    total_crimes = aws.getCityData(city, engine)
+    SQ_of_city = aws.get_city_area(city, engine)
+
+    N = (area_of_circle) * (total_crimes)/SQ_of_city
+    crimeScore = 0
+    allRecords = []
+    records_in_circle = getRecordsInCircle(lat, long, area_of_circle, allRecords)
+
+    frac = (records_in_circle/N)
+    if (frac > veryUnsafeThreshold):
+        crimeScore = veryUnsafeScore
+    elif (frac > unsafeThreshold):
+        crimeScore = unsafeScore
+    elif (frac > okThreshold):
+        crimeScore = okScore
+    elif (frac > safeThreshold):
+        crimeScore = safeScore
+    elif (frac < safeThreshold):
+        crimeScore = reallySafeScore
+    return {"crimeScore": crimeScore}
+
 
 
 if __name__ == '__main__':
