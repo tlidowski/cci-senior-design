@@ -1,5 +1,7 @@
 import json
 
+import math
+
 import numpy as np
 from flask import Flask, render_template, jsonify, request
 import requests
@@ -11,7 +13,19 @@ import map_processing as mp
 app = Flask(__name__)
 engine = None
 
+veryUnsafeThreshold = 2
+veryUnsafeScore = 1
 
+unsafeThreshold = 1
+unsafeScore = 2
+
+okThreshold=0.5
+okScore = 3
+
+safeThreshold = 0.25
+safeScore = 4
+
+reallySafeScore = 5
 def apply_mask(df, column_name, value):
     mask = (df[column_name] == value)
     # apply mask to result
@@ -215,43 +229,55 @@ def get_locations_given_radius():
     
 @app.route('/crimes_pie_chart', methods=['GET'])
 def get_pie_chart():
+    # pie chart using crime codes 
+    # TODO: group crime codes into categories provided by prof
+    crime_descriptions = {
+        'Arson'                  : ['200'],
+        'Assault'                : ['13', '13A', '13B', '13C'],
+        'Bribery'                : ['510'],
+        'Burglary'               : ['220'],
+        'Counterfeiting/Forgery' : ['250'],
+        'Vandalism of Property'  : ['290'],
+        'Drug/Narcotic Offenses' : ['35', '35A', '35B'],
+        'Embezzlement'           : ['270'],
+        'Extortion/Blackmail'    : ['210'],
+        'Fraud Offenses'         : ['26', '26A','26B', '26C', '26D', '26E'],
+        'Gambling Offenses'      : ['39', '39A', '39B', '39C', '39D'],
+        'Homicide'               : ['09', '09A', '09B', '09C'],
+        'Kidnapping/Abduction'   : ['100'],
+        'Larceny-Theft'          : ['23','23A','23B','23C','23D','23E','23F','23G','23H'],
+        'Vehicle-Theft'          : ['240'],
+        'Pornography'            : ['370'],
+        'Prostitution'           : ['40', '40A', '40B'],
+        'Armed Robbery'          : ['120'],
+        'Sex Offenses, Forcible' : ['11', '11A', '11B', '11C', '11D'], 
+        'Sex Offenses, Nonforcible':['36A', '36B'],
+        'Stolen Property Offenses' : ['280'],
+        'Weapon Law Violations'    : ['520'],
+        'Other'                    : ['90', '90A', '90B', '90C', '90D', '90E', '90F', '90G', '90H', '90I', '90J', '90Z']
+    }
+
     city = request.args.get('city')
     start = request.args.get('start')
     end = request.args.get('end')
     try:
-        path_2020 = f'../combined_city_data/city_data-{2020}.csv'
-        path_2021 = f'../combined_city_data/city_data-{2021}.csv'
+        engine = aws.initConnection()
+        res= aws.get_crime_descriptions_and_counts(city, engine)
+        crimes_and_counts = {
+        }
 
-        year_csvs = {"2020": path_2020,
-                     "2021": path_2021
-                     }
+        for crime_codes, count in zip(res['fbi_crime_code'], res['crime_count']):
+            for crime_code in crime_codes:
+                for key, values in zip(crime_descriptions.keys(), crime_descriptions.values()):
+                    if crime_code in values:
+                        if key in crimes_and_counts.keys():
+                            crimes_and_counts[key] += count
+                        else:
+                            crimes_and_counts[key] = count
 
-        column_types = get_column_types()
-
-        if (start in year_csvs.keys()) and (end in year_csvs.keys()):
-            start_year_df = pd.read_csv(year_csvs[start], dtype=column_types)
-            start_year_res = apply_mask(start_year_df, 'CITY_NAME', city)
-
-            end_year_df = []
-            end_year_res = []
-
-            if start != end:
-                end_year_df = pd.read_csv(year_csvs[end], dtype=column_types)
-                end_year_res = apply_mask(end_year_df, 'CITY_NAME', city)
-
-            # res = None
-            if len(end_year_res) != 0:
-                res = pd.concat([start_year_res, end_year_res], axis=0)
-            else:
-                res = start_year_res
-        
-            crimes_counted = res['CRIME_DESCRIPTION'].value_counts().rename_axis('crimes').reset_index(name='counts')
-            counts_filtered = crimes_counted[crimes_counted['counts'] >= 1400]
-
-        print(counts_filtered['counts'])
         return json.dumps({
-            "counts": counts_filtered['counts'].to_list(),
-            "crimes": counts_filtered['crimes'].to_list()
+            "counts": list(crimes_and_counts.values()),
+            "crimes": list(crimes_and_counts.keys())
         })
     except Exception as e:
         print(f'Faliure: {e}')
@@ -347,6 +373,56 @@ def get_locations_given_address():
 @app.route('/')
 def index():
     return render_template("index.html")
+
+
+def getAreaOfCircle(radius):
+    area = 0
+    try:
+        area = math.pi*(int(radius)**2)
+    except Exception as e:
+        area = math.pi*(float(radius)**2)
+    return area
+
+def getRecordsInCircle(lat, long, area_of_circle, allRecords):
+    return 60
+def getSQOfCity(city):
+    sq_of_city = 500000
+    return sq_of_city
+
+def getTotalCrimes(city):
+    total_crimes = 100
+    return total_crimes
+
+@app.route('/get_crime_score', methods=['GET'])
+def getCrimeScore():
+    city = request.args.get('city')
+    lat = request.args.get('lat')
+    long = request.args.get('long')
+    radius = request.args.get('radius')
+
+    area_of_circle = getAreaOfCircle(radius)
+    engine = aws.initConnection()
+    total_crimes = aws.getCityData(city, engine)
+    SQ_of_city = aws.get_city_area(city, engine)
+
+    N = (area_of_circle) * (total_crimes)/SQ_of_city
+    crimeScore = 0
+    allRecords = []
+    records_in_circle = getRecordsInCircle(lat, long, area_of_circle, allRecords)
+
+    frac = (records_in_circle/N)
+    if (frac > veryUnsafeThreshold):
+        crimeScore = veryUnsafeScore
+    elif (frac > unsafeThreshold):
+        crimeScore = unsafeScore
+    elif (frac > okThreshold):
+        crimeScore = okScore
+    elif (frac > safeThreshold):
+        crimeScore = safeScore
+    elif (frac < safeThreshold):
+        crimeScore = reallySafeScore
+    return {"crimeScore": crimeScore}
+
 
 
 if __name__ == '__main__':

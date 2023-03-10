@@ -27,6 +27,10 @@ def getCityData(cityName, engine):
     query = 'select * from all_crime where city_name=' + "'" + cityName + "'"
     return pd.read_sql(query, con=engine)
 
+def get_crime_descriptions_and_counts (cityName, engine):
+    query = "select fbi_crime_code, count(fbi_crime_code) AS Crime_Count from all_crime where city_name = '" + cityName + "' group by fbi_crime_code"
+    return pd.read_sql(query, con=engine)
+
 def getCityDataGivenYears(cityName, start, end, engine):
     start = f"'{start}0101'"
     end = f"'{end}1231'"
@@ -39,6 +43,13 @@ def get_crime_descriptions(cityName, engine):
     description = executeGetQuery(descr_query, engine)['crime_description'].tolist()
     return description
 
+def get_city_population(cityName, engine):
+    query = "select population from city_information where city_name = '" + cityName + "'"
+    return pd.read_sql(query, con=engine)
+
+def get_city_area(cityName, engine):
+    query = "select area from city_information where city_name = '" + cityName + "'"
+    return pd.read_sql(query, con=engine)
 def initConnection():
     format_table_view()
     load_dotenv()
