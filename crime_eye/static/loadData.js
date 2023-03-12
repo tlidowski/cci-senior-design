@@ -69,17 +69,47 @@ pull.addEventListener("click", function () {
         })
         .then((data) => {
             $(document).ready(function (){
-                // console.log(data.counts);
-                var lineGraph_data = [{
-                    type: "scatter",
-                    y: data.counts,
-                    x: data.dates
-                }];
+                var countsByYearMonth = {}
+                for (var i = 0; i < data.dates.length; i++) {
+                    var splitDate = data.dates[i].split("/")
+                    var year = parseInt(splitDate[1])
+                    if (!isNaN(year)) {
+                        var month = splitDate[0]
+                        if (!countsByYearMonth[year]) {
+                            countsByYearMonth[year] = {}
+                        }
+                        if (!countsByYearMonth[year][month]) {
+                            countsByYearMonth[year][month] = 0
+                        }
+                        countsByYearMonth[year][month] += data.counts[i]
+                    }
+                }
+
+                var lineGraph_data = []
+                for (var year in countsByYearMonth) {
+                    var x = []
+                    var y = []
+                    for (var month in countsByYearMonth[year]) {
+                        x.push(getMonthName(parseInt(month)))
+                        y.push(countsByYearMonth[year][month])
+                    }
+
+                    var monthOrder = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+                    x.sort((a,b) => monthOrder.indexOf(a) - monthOrder.indexOf(b))
+                    y.sort((a,b) => monthOrder.indexOf(x[y.indexOf(a)]) - monthOrder.indexOf(x[y.indexOf(b)]))
+
+                    lineGraph_data.push({
+                        type: "scatter",
+                        y: y,
+                        x: x,
+                        name: year.toString()
+                    })
+                }
 
                 var layout = {
                     title: 'Crime Timeline',
                     xaxis: {
-                        title: 'Month/Year'
+                        title: 'Month'
                     },
                     yaxis: {
                         title: 'Number of Crimes',
@@ -87,10 +117,17 @@ pull.addEventListener("click", function () {
                     }
                 };
 
-                Plotly.newPlot('lineGraph',lineGraph_data, layout);
+                Plotly.newPlot('lineGraph', lineGraph_data, layout);
+
             })
         })
 })
+
+function getMonthName(monthNum) {
+    var months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    return months[monthNum - 1];
+}
+
 
 window.addEventListener("load", ()=>{
     // Initialize map
