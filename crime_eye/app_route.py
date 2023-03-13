@@ -211,7 +211,7 @@ def get_pie_chart():
         res= aws.get_crime_descriptions_and_counts(city, engine)
         crimes_and_counts = {
         }
-
+        count_sum = sum(res['crime_count'])
         for crime_codes, count in zip(res['fbi_crime_code'], res['crime_count']):
             if crime_codes == None:
                 continue
@@ -222,6 +222,17 @@ def get_pie_chart():
                             crimes_and_counts[key] += count
                         else:
                             crimes_and_counts[key] = count
+        
+        keys_to_delete = []
+        for crime, count in zip(crimes_and_counts.keys(), crimes_and_counts.values()):
+            if crime == 'Other':
+                continue
+            if (count / count_sum * 100) <= .5:
+                crimes_and_counts['Other'] += count
+                keys_to_delete.append(crime)
+                
+        for crime in keys_to_delete:
+            del crimes_and_counts[crime]
         return json.dumps({
             "counts": list(crimes_and_counts.values()),
             "crimes": list(crimes_and_counts.keys())
