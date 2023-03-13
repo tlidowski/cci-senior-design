@@ -213,6 +213,8 @@ def get_pie_chart():
         }
 
         for crime_codes, count in zip(res['fbi_crime_code'], res['crime_count']):
+            if crime_codes == None:
+                continue
             for crime_code in crime_codes:
                 for key, values in zip(crime_descriptions.keys(), crime_descriptions.values()):
                     if crime_code in values:
@@ -220,7 +222,6 @@ def get_pie_chart():
                             crimes_and_counts[key] += count
                         else:
                             crimes_and_counts[key] = count
-
         return json.dumps({
             "counts": list(crimes_and_counts.values()),
             "crimes": list(crimes_and_counts.keys())
