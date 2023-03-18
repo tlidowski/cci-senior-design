@@ -323,8 +323,34 @@ def get_locations_given_address():
 
     engine = aws.initConnection()
     res = aws.getCityDataGivenYears(cityName, start, end, engine)
+
+    ret = aws.get_city_area(cityName, engine)
+    SQ_of_city = ret["area"].tolist()[0]
+
     engine.close()
     crimeFeatures = mp.createFeatures(res, userLon, userLat, radius)
+
+    area_of_circle = getAreaOfCircle(radius)
+    crimeScore = -1
+
+    try:
+        total_crimes = len(crimeFeatures["inside"]) + len(crimeFeatures["outside"])
+        N = area_of_circle * total_crimes / SQ_of_city
+        records_in_circle = len(crimeFeatures["inside"])
+        frac = (records_in_circle / N)
+        if (frac > veryUnsafeThreshold):
+            crimeScore = veryUnsafeScore
+        elif (frac > unsafeThreshold):
+            crimeScore = unsafeScore
+        elif (frac > okThreshold):
+            crimeScore = okScore
+        elif (frac > safeThreshold):
+            crimeScore = safeScore
+        elif (frac < safeThreshold):
+            crimeScore = reallySafeScore
+    except Exception as e:
+        print(f'Failure: {e}')
+
     radiusFeature = mp.generateRadiusGeoJson((userLon, userLat), radius)
     # Todo, generate list based on crime type as well as (or instead of) within radius
     return json.dumps({
@@ -334,6 +360,7 @@ def get_locations_given_address():
             "feature": radiusFeature,
         },
         "features": crimeFeatures,
+        "crimeScore": crimeScore
     })
 
 
@@ -384,7 +411,7 @@ def get_crime_score():
         # engine.close()
         # print("\nAFTER CLOSE:\n")
         # allRecords = []
-        # records_in_circle = getRecordsInCircle(lat, long, area_of_circle, allRecords)
+        # records_in_circle = getRecordsInCircle(area_of_circle, allRecords)
         # frac = (records_in_circle / N)
     # if (frac > veryUnsafeThreshold):
     #     crimeScore = veryUnsafeScore

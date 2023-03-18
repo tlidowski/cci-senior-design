@@ -25,8 +25,9 @@ function getDataFromAddress(data){
             if(res.errors.length){
                 console.log(`Error: ${res.errors[0]}`)
             }else{
-                
                 mapChart.sendData(res.features, res.center);
+                let crimeScoreBox = document.getElementById("crime-score-box");
+                crimeScoreBox.innerHTML = res.crimeScore;
             }
         });
 }
