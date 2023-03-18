@@ -386,52 +386,6 @@ def getTotalCrimes(city):
     total_crimes = 100
     return total_crimes
 
-
-@app.route('/get_crime_score', methods=['GET'])
-def get_crime_score():
-    print("AT GET CRIME SCORE")
-    city = request.args.get('city')
-    lat = float(request.args.get('lat'))
-    long = float(request.args.get('long'))
-    radius = float(request.args.get('radius'))
-    area_of_circle = getAreaOfCircle(radius)
-    print(city, lat, long, radius, area_of_circle)
-    engine = None
-    try:
-        print("\nAT TRY:\n")
-        engine = aws.initConnection()
-        # print("Engine: ", engine)
-        print("CHECK 1")
-        SQ_of_city = aws.get_city_area(city, engine)
-        print("CHECK 2")
-        # total_crimes = aws.getCityDataGivenYears(city, engine)
-        # # N = area_of_circle * total_crimes / SQ_of_city
-        # # print(N)
-        # # crimeScore = 0
-        # engine.close()
-        # print("\nAFTER CLOSE:\n")
-        # allRecords = []
-        # records_in_circle = getRecordsInCircle(area_of_circle, allRecords)
-        # frac = (records_in_circle / N)
-    # if (frac > veryUnsafeThreshold):
-    #     crimeScore = veryUnsafeScore
-    # elif (frac > unsafeThreshold):
-    #     crimeScore = unsafeScore
-    # elif (frac > okThreshold):
-    #     crimeScore = okScore
-    # elif (frac > safeThreshold):
-    #     crimeScore = safeScore
-    # elif (frac < safeThreshold):
-    #     crimeScore = reallySafeScore
-    except Exception as e:
-        print(f'Failure: {e}')
-        return {}
-    crimeScore = 1
-    return json.dumps(
-        {"crimeScore": crimeScore}
-    )
-
-
 @app.route('/')
 def index():
     return render_template("index.html")
