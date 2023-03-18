@@ -10,6 +10,7 @@ from math import radians, cos, sin, asin, sqrt
 import validation as v
 import aws_connection as aws
 import map_processing as mp
+
 app = Flask(__name__)
 engine = None
 
@@ -19,13 +20,15 @@ veryUnsafeScore = 1
 unsafeThreshold = 1
 unsafeScore = 2
 
-okThreshold=0.5
+okThreshold = 0.5
 okScore = 3
 
 safeThreshold = 0.25
 safeScore = 4
 
 reallySafeScore = 5
+
+
 def apply_mask(df, column_name, value):
     mask = (df[column_name] == value)
     # apply mask to result
@@ -47,10 +50,12 @@ def get_column_types():
     }
     return column_types
 
+
 def get_lat_lon(df):
     lats = df['LATITUDE']
     lons = df["LONGITUDE"]
     return lats.tolist(), lons.tolist()
+
 
 # https://stackoverflow.com/questions/4913349/haversine-formula-in-python-bearing-and-distance-between-two-gps-points
 def haversine(lon1, lat1, lon2, lat2):
@@ -62,23 +67,23 @@ def haversine(lon1, lat1, lon2, lat2):
     lon1, lat1, lon2, lat2 = map(radians, [lon1, lat1, lon2, lat2])
 
     # haversine formula 
-    dlon = lon2 - lon1 
-    dlat = lat2 - lat1 
-    a = sin(dlat/2)**2 + cos(lat1) * cos(lat2) * sin(dlon/2)**2
-    c = 2 * asin(sqrt(a)) 
-    r = 3956 # Radius of earth in Miles. Use 3956 for miles.
+    dlon = lon2 - lon1
+    dlat = lat2 - lat1
+    a = sin(dlat / 2) ** 2 + cos(lat1) * cos(lat2) * sin(dlon / 2) ** 2
+    c = 2 * asin(sqrt(a))
+    r = 3956  # Radius of earth in Miles. Use 3956 for miles.
     return c * r
+
 
 def get_location_from_name(city):
     # Lon, Lat
     nameMap = {
-        "boston": [-71.0589, 42.3601,],
+        "boston": [-71.0589, 42.3601, ],
     }
     try:
         return nameMap[city.lower()]
     except:
         return [None, None]
-    
 
 
 # Only works if server is run in the crimeeye folder: python3
@@ -111,8 +116,6 @@ def get_city_crime_data():
                 end_year_res = apply_mask(end_year_df, 'CITY_NAME', city)
                 end_lats, end_lons = get_lat_lon(start_year_res)
 
-
-
             # res = None
             if len(end_year_res) != 0:
                 res = pd.concat([start_year_res, end_year_res], axis=0)
@@ -124,7 +127,6 @@ def get_city_crime_data():
                 lats = start_lats
                 lons = start_lons
 
-            
         return res.to_json(orient='records')
     except Exception as e:
         print(e)
@@ -173,34 +175,35 @@ def get_city_geo_data():
         print("Failure")
         return {}
 
+
 @app.route('/crimes_pie_chart', methods=['GET'])
 def get_pie_chart():
     # pie chart using crime codes 
     # TODO: group crime codes into categories provided by prof
     crime_descriptions = {
-        'Arson'                  : ['200'],
-        'Assault'                : ['13', '13A', '13B', '13C'],
-        'Bribery'                : ['510'],
-        'Burglary'               : ['220'],
-        'Counterfeiting/Forgery' : ['250'],
-        'Vandalism of Property'  : ['290'],
-        'Drug/Narcotic Offenses' : ['35', '35A', '35B'],
-        'Embezzlement'           : ['270'],
-        'Extortion/Blackmail'    : ['210'],
-        'Fraud Offenses'         : ['26', '26A','26B', '26C', '26D', '26E'],
-        'Gambling Offenses'      : ['39', '39A', '39B', '39C', '39D'],
-        'Homicide'               : ['09', '09A', '09B', '09C'],
-        'Kidnapping/Abduction'   : ['100'],
-        'Larceny-Theft'          : ['23','23A','23B','23C','23D','23E','23F','23G','23H'],
-        'Vehicle-Theft'          : ['240'],
-        'Pornography'            : ['370'],
-        'Prostitution'           : ['40', '40A', '40B'],
-        'Armed Robbery'          : ['120'],
-        'Sex Offenses, Forcible' : ['11', '11A', '11B', '11C', '11D'], 
-        'Sex Offenses, Nonforcible':['36A', '36B'],
-        'Stolen Property Offenses' : ['280'],
-        'Weapon Law Violations'    : ['520'],
-        'Other'                    : ['90', '90A', '90B', '90C', '90D', '90E', '90F', '90G', '90H', '90I', '90J', '90Z']
+        'Arson': ['200'],
+        'Assault': ['13', '13A', '13B', '13C'],
+        'Bribery': ['510'],
+        'Burglary': ['220'],
+        'Counterfeiting/Forgery': ['250'],
+        'Vandalism of Property': ['290'],
+        'Drug/Narcotic Offenses': ['35', '35A', '35B'],
+        'Embezzlement': ['270'],
+        'Extortion/Blackmail': ['210'],
+        'Fraud Offenses': ['26', '26A', '26B', '26C', '26D', '26E'],
+        'Gambling Offenses': ['39', '39A', '39B', '39C', '39D'],
+        'Homicide': ['09', '09A', '09B', '09C'],
+        'Kidnapping/Abduction': ['100'],
+        'Larceny-Theft': ['23', '23A', '23B', '23C', '23D', '23E', '23F', '23G', '23H'],
+        'Vehicle-Theft': ['240'],
+        'Pornography': ['370'],
+        'Prostitution': ['40', '40A', '40B'],
+        'Armed Robbery': ['120'],
+        'Sex Offenses, Forcible': ['11', '11A', '11B', '11C', '11D'],
+        'Sex Offenses, Nonforcible': ['36A', '36B'],
+        'Stolen Property Offenses': ['280'],
+        'Weapon Law Violations': ['520'],
+        'Other': ['90', '90A', '90B', '90C', '90D', '90E', '90F', '90G', '90H', '90I', '90J', '90Z']
     }
 
     city = request.args.get('city')
@@ -208,7 +211,10 @@ def get_pie_chart():
     end = request.args.get('end')
     try:
         engine = aws.initConnection()
-        res= aws.get_crime_descriptions_and_counts(city, engine)
+        res = aws.get_crime_descriptions_and_counts(city, engine)
+
+        engine.close()
+
         crimes_and_counts = {
         }
         count_sum = sum(res['crime_count'])
@@ -222,7 +228,7 @@ def get_pie_chart():
                             crimes_and_counts[key] += count
                         else:
                             crimes_and_counts[key] = count
-        
+
         keys_to_delete = []
         for crime, count in zip(crimes_and_counts.keys(), crimes_and_counts.values()):
             if crime == 'Other':
@@ -230,7 +236,7 @@ def get_pie_chart():
             if (count / count_sum * 100) <= .5:
                 crimes_and_counts['Other'] += count
                 keys_to_delete.append(crime)
-                
+
         for crime in keys_to_delete:
             del crimes_and_counts[crime]
         return json.dumps({
@@ -240,6 +246,7 @@ def get_pie_chart():
     except Exception as e:
         print(f'Faliure: {e}')
         return {}
+
 
 @app.route('/crimes_line_graph', methods=['GET'])
 def get_line_graph():
@@ -263,7 +270,6 @@ def get_line_graph():
             end_df = []
             end_res = []
 
-
             if start != end:
                 end_df = pd.read_csv(year_csvs[end], dtype=column_types)
                 end_res = apply_mask(end_df, 'CITY_NAME', city)
@@ -275,7 +281,8 @@ def get_line_graph():
                 res = start_res
 
             res['DATE_OCCURRED'] = pd.to_datetime(res['DATE_OCCURRED']).dt.strftime('%m/%Y')
-            crimes_counted = res['DATE_OCCURRED'].value_counts().rename_axis('dates').sort_index().reset_index(name='counts')
+            crimes_counted = res['DATE_OCCURRED'].value_counts().rename_axis('dates').sort_index().reset_index(
+                name='counts')
             counts_filtered = crimes_counted[crimes_counted['counts'] > 0]
 
             # print(counts_filtered['counts'])
@@ -286,12 +293,13 @@ def get_line_graph():
     except Exception as e:
         print(f'Failure: {e}')
         return {}
-    
+
+
 # Using AWS
 @app.route('/crimes_from_address', methods=['GET'])
 def get_locations_given_address():
     cityMap = {
-        "new york":"New York City"
+        "new york": "New York City"
     }
     cityName = request.args.get('cityName')
     if cityName.lower() in cityMap.keys():
@@ -306,13 +314,13 @@ def get_locations_given_address():
 
     if not v.validateYears(start, end):
         return json.dumps(
-            {"errors":["Invalid Years"]}
+            {"errors": ["Invalid Years"]}
         )
     if not v.validateCity(cityName):
         return json.dumps(
-            {"errors":["No crime data for given city"]}
+            {"errors": ["No crime data for given city"]}
         )
-    
+
     engine = aws.initConnection()
     res = aws.getCityDataGivenYears(cityName, start, end, engine)
     engine.close()
@@ -320,70 +328,87 @@ def get_locations_given_address():
     radiusFeature = mp.generateRadiusGeoJson((userLon, userLat), radius)
     # Todo, generate list based on crime type as well as (or instead of) within radius
     return json.dumps({
-        "errors":[],
+        "errors": [],
         "center": {
-            "coords" : (userLon, userLat),
-            "feature" :radiusFeature,
+            "coords": (userLon, userLat),
+            "feature": radiusFeature,
         },
-        "features":crimeFeatures,
+        "features": crimeFeatures,
     })
-    
-@app.route('/')
-def index():
-    return render_template("index.html")
 
 
 def getAreaOfCircle(radius):
     area = 0
-    try:
-        area = math.pi*(int(radius)**2)
-    except Exception as e:
-        area = math.pi*(float(radius)**2)
+    if type(radius) == float:
+        area = math.pi * radius ** 2
+    else:
+        area = math.pi * (float(radius) ** 2)
     return area
+
 
 def getRecordsInCircle(lat, long, area_of_circle, allRecords):
     return 60
+
+
 def getSQOfCity(city):
     sq_of_city = 500000
     return sq_of_city
+
 
 def getTotalCrimes(city):
     total_crimes = 100
     return total_crimes
 
+
 @app.route('/get_crime_score', methods=['GET'])
-def getCrimeScore():
+def get_crime_score():
+    print("AT GET CRIME SCORE")
     city = request.args.get('city')
-    lat = request.args.get('lat')
-    long = request.args.get('long')
-    radius = request.args.get('radius')
-
+    lat = float(request.args.get('lat'))
+    long = float(request.args.get('long'))
+    radius = float(request.args.get('radius'))
     area_of_circle = getAreaOfCircle(radius)
-    engine = aws.initConnection()
-    total_crimes = aws.getCityData(city, engine)
-    SQ_of_city = aws.get_city_area(city, engine)
+    print(city, lat, long, radius, area_of_circle)
+    engine = None
+    try:
+        print("\nAT TRY:\n")
+        engine = aws.initConnection()
+        # print("Engine: ", engine)
+        print("CHECK 1")
+        SQ_of_city = aws.get_city_area(city, engine)
+        print("CHECK 2")
+        # total_crimes = aws.getCityDataGivenYears(city, engine)
+        # # N = area_of_circle * total_crimes / SQ_of_city
+        # # print(N)
+        # # crimeScore = 0
+        # engine.close()
+        # print("\nAFTER CLOSE:\n")
+        # allRecords = []
+        # records_in_circle = getRecordsInCircle(lat, long, area_of_circle, allRecords)
+        # frac = (records_in_circle / N)
+    # if (frac > veryUnsafeThreshold):
+    #     crimeScore = veryUnsafeScore
+    # elif (frac > unsafeThreshold):
+    #     crimeScore = unsafeScore
+    # elif (frac > okThreshold):
+    #     crimeScore = okScore
+    # elif (frac > safeThreshold):
+    #     crimeScore = safeScore
+    # elif (frac < safeThreshold):
+    #     crimeScore = reallySafeScore
+    except Exception as e:
+        print(f'Failure: {e}')
+        return {}
+    crimeScore = 1
+    return json.dumps(
+        {"crimeScore": crimeScore}
+    )
 
-    N = (area_of_circle) * (total_crimes)/SQ_of_city
-    crimeScore = 0
-    allRecords = []
-    records_in_circle = getRecordsInCircle(lat, long, area_of_circle, allRecords)
 
-    frac = (records_in_circle/N)
-    if (frac > veryUnsafeThreshold):
-        crimeScore = veryUnsafeScore
-    elif (frac > unsafeThreshold):
-        crimeScore = unsafeScore
-    elif (frac > okThreshold):
-        crimeScore = okScore
-    elif (frac > safeThreshold):
-        crimeScore = safeScore
-    elif (frac < safeThreshold):
-        crimeScore = reallySafeScore
-    return {"crimeScore": crimeScore}
-
+@app.route('/')
+def index():
+    return render_template("index.html")
 
 
 if __name__ == '__main__':
-    
     app.run(host='0.0.0.0', debug=True, port=5000)
-

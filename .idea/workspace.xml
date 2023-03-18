@@ -5,7 +5,12 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="8191229b-13e5-45f5-8555-fd13acb5506e" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/crime_eye/static/loadData.js" beforeDir="false" afterPath="$PROJECT_DIR$/crime_eye/static/loadData.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/crime_eye/app_route.py" beforeDir="false" afterPath="$PROJECT_DIR$/crime_eye/app_route.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/crime_eye/aws_connection.py" beforeDir="false" afterPath="$PROJECT_DIR$/crime_eye/aws_connection.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/crime_eye/css/styles.css" beforeDir="false" afterPath="$PROJECT_DIR$/crime_eye/static/css/styles.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/crime_eye/static/crimeScore.js" beforeDir="false" afterPath="$PROJECT_DIR$/crime_eye/static/crimeScore.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/crime_eye/templates/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/crime_eye/templates/index.html" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -35,17 +40,17 @@
   &quot;keyToString&quot;: {
     &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/Users/amcad/Documents/Fall2022/SeniorDesign/senior-design-scratch&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/amcad/Documents/Winter2022/SeniorDesign/senior-design-scratch&quot;,
     &quot;settings.editor.selected.configurable&quot;: &quot;preferences.keymap&quot;
   }
 }</component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\amcad\Documents\Winter2022\SeniorDesign\senior-design-scratch\crime_eye\static\css" />
       <recent name="$PROJECT_DIR$/crime_eye/template" />
       <recent name="$PROJECT_DIR$/crime_eye" />
       <recent name="$PROJECT_DIR$" />
       <recent name="$PROJECT_DIR$/datasets" />
-      <recent name="$PROJECT_DIR$/api_calls" />
     </key>
   </component>
   <component name="RunManager" selected="Python.app_route">
@@ -134,9 +139,9 @@
       <method v="2" />
     </configuration>
     <list>
+      <item itemvalue="Python.aws_testing" />
       <item itemvalue="Python.app" />
       <item itemvalue="Python.app_route" />
-      <item itemvalue="Python.aws_testing" />
       <item itemvalue="Python.main" />
     </list>
     <recent_temporary>

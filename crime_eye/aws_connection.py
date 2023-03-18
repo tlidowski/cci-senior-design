@@ -43,7 +43,7 @@ def get_crime_descriptions(cityName, engine):
     return description
 
 def get_city_population(cityName, engine):
-    query = "select population from city_information where city_name = '" + cityName + "'"
+    query = "select population from city_information where city_name='" + cityName + "'"
     return pd.read_sql(query, con=engine)
 
 def get_city_area(cityName, engine):

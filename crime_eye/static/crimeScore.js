@@ -1,46 +1,36 @@
-
-//
-//let pull = document.getElementById("pull");
-//
-
 //The inputs are:
-//
 //a location (City Center as an example)
-//
 //and a radius (r, 5 miles as an example):
-//
 //===============================
-//
 //PARAMETERS ARE
-//
 //Latitude
-//
 //Longitude
-//
 //Radius
-//
 //(we are letting user choose a radius, i can use whatever values, they will come from micah. use mock radii)
 
 function renderBox(lat, long, radius) {
     let city = document.getElementById("city").value;
-    console.log("CITY:", city);
-    fetch(`http://127.0.0.1:5000/get_crime_score?city=${city}&lat=${lat}&long=${long}&radius=${radius}`)
-        .then((response) => {
+    console.log("CITY:", city, "LAT:", lat, "LONG:", long, "RADIUS:", radius);
 
-            console.log(response);
+    let address = "http://10.184.190.93:5000"
+    let address2 = "http://127.0.0.1:5000"
+    let fetchStr = `${address2}/get_crime_score?city=${city}&lat=${lat}&long=${long}&radius=${radius}`;
+    fetch(fetchStr)
+        .then((response) => {
             return response.json();
         })
         .then((data) => {
-            $(document).ready(function (){
-                console.log(data);
+           $(document).ready(function (){
+                let crimeScoreBox = document.getElementById("crime-score-box");
+                console.log("AT RENDER BOX:", data.crimeScore, crimeScoreBox);
+                crimeScoreBox.innerHTML = data.crimeScore;
+                //let box = '<div id="crimeScoreBox" value="">${crimeScore}</div>';
             })
         })
+        .catch(error => alert(error.message));
 
-//    let crimeScore = getCrimeScore(city, lat, long, radius);
-//    let crimeScoreBox = document.getElementById("crime-score-box");
-//    console.log("AT RENDER BOX:", crimeScore, crimeScoreBox);
-//    crimeScoreBox.innerHTML = crimeScore;
-    //let box = '<div id="crimeScoreBox" value="">${crimeScore}</div>';
+
+
 }
 
 function getEnteredInfo() {
