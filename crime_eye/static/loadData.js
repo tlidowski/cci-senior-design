@@ -129,6 +129,44 @@ function getMonthName(monthNum) {
     return months[monthNum - 1];
 }
 
+// bar graph
+pull.addEventListener("click", function () {
+    let city = document.getElementById("city").value
+    let start = document.getElementById("start").value
+    let end = document.getElementById("end").value
+    let city2 = document.getElementById("cityCompare").value
+
+    if (city2 != null) {
+        fetch(`http://127.0.0.1:5000/crimes_bar_graph?city=${city}&city2=${city2}&start=${start}&end=${end}`)
+        .then((response) => {
+            return response.json();
+        })
+        .then((data) => {
+            $(document).ready(function (){
+                var cityOne = {
+                    type: "bar",
+                    name: city,
+                    y: data.counts,
+                    x: data.crimes
+                };
+                var cityTwo = {
+                    type: "bar",
+                    name: city2,
+                    y: data.counts2,
+                    x: data.crimes2
+                };
+                var bar_data = [cityOne, cityTwo];
+                var layout = {
+                    barmode: 'group',
+                    title: 'Crimes Committed Against Categories',
+                    xaxis: { title: 'Categories by City' },
+                    yaxis: { title: 'Number of Crimes'}
+                };
+                Plotly.newPlot('barGraph', bar_data, layout);
+            })
+        })
+    }
+})
 
 window.addEventListener("load", ()=>{
     // Initialize map
@@ -137,7 +175,6 @@ window.addEventListener("load", ()=>{
     slider.onclick =  function (){
         mapChart.setRadius(slider.value);
     };
-
 })
 
 

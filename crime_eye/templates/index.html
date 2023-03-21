@@ -97,6 +97,10 @@
                             data-bs-target="#nav-line-graph" type="button" role="tab" aria-controls="nav-line-graph"
                             aria-selected="false">Line Graph
                             </button>
+                            <button class="nav-link" id="nav-bar-graph-tab" data-bs-toggle="tab"
+                            data-bs-target="#nav-bar-graph" type="button" role="tab" aria-controls="nav-bar-graph"
+                            aria-selected="false">Bar Graph
+                            </button>
                         </div>
                     </nav>
                 </div>
@@ -119,6 +123,27 @@
                         </div>
 						<div class="tab-pane fade" id="nav-line-graph" role="tabpanel" aria-labelledby="nav-line-graph-tab">
                             <div id="lineGraph"></div>
+                        </div>
+                        <div class="tab-pane fade" id="nav-bar-graph" role="tabpanel" aria-labelledby="nav-bar-graph-tab">
+                            <div class="input-group ">
+                                <div class="input-group-text">Compare Another City</div>
+                                    <select class="form-control" id="cityCompare" placeholder="City Name">
+                                        <option selected disabled>Select</option>
+                                        <option>Austin</option>
+                                        <option>Baltimore</option>
+                                        <option>Boston</option>
+                                        <option>Charlotte</option>
+                                        <option>Chicago</option>
+                                        <option>Denver</option>
+                                        <option>Detroit</option>
+                                        <option>Los Angeles</option>
+                                        <option>New York City</option>
+                                        <option>Philadelphia</option>
+                                        <option>Seattle</option>
+                                        <option>Washington DC</option>
+                                    </select>
+                            </div>
+                            <div id="barGraph" class="mapType"></div>
                         </div>
                     </div>
                 </div>

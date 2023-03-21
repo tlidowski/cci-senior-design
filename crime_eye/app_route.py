@@ -271,6 +271,62 @@ def get_line_graph():
         print(f'Failure: {e}')
         return {}
 
+
+@app.route('/crimes_bar_graph', methods=['GET'])
+def get_bar_graph():
+    city = request.args.get('city')
+    city2 = request.args.get('city2')
+
+    crimes_against = {
+        'Property': ['200', '510', '220', '250', '510', '290', '250', '270', '210', '26', '26A', '26B', '26C', '26D',
+                     '26E', '23', '23A', '23B', '23C', '23D', '23E', '23F', '23G', '23H', '240', '90A'],
+        'Person': ['13', '13A', '13B', '13C', '39', '09', '09A', '09B', '09C', '100', '11', '11A', '11B', '11C',
+                   '11D', '36', '36B'],
+        'Society': ['35', '35A', '35B', '39', '39A', '39B', '39C', '39D', '40', '40A', '40B', '90B', '90C', '90D',
+                    '90E', '90F', '90G', '90H', '90J', '370'],
+        'Other': ['90z', '90Z', '90I']
+    }
+    try:
+        engine = aws.initConnection()
+        res = aws.get_crime_descriptions_and_counts(city, engine)
+        res2 = aws.get_crime_descriptions_and_counts(city2, engine)
+        engine.close()
+
+        crimes_against_counts = {
+        }
+        crimes_against_counts2 = {
+        }
+        for crime_codes, count in zip(res['fbi_crime_code'], res['crime_count']):
+            if crime_codes == None:
+                continue
+            for crime_code in crime_codes:
+                for key, values in zip(crimes_against.keys(), crimes_against.values()):
+                    if crime_code in values:
+                        if key in crimes_against_counts.keys():
+                            crimes_against_counts[key] += count
+                        else:
+                            crimes_against_counts[key] = count
+        for crime_codes, count in zip(res2['fbi_crime_code'], res2['crime_count']):
+            if crime_codes == None:
+                continue
+            for crime_code in crime_codes:
+                for key, values in zip(crimes_against.keys(), crimes_against.values()):
+                    if crime_code in values:
+                        if key in crimes_against_counts2.keys():
+                            crimes_against_counts2[key] += count
+                        else:
+                            crimes_against_counts2[key] = count
+        return json.dumps({
+            "counts": list(crimes_against_counts.values()),
+            "crimes": list(crimes_against_counts.keys()),
+            "counts2": list(crimes_against_counts2.values()),
+            "crimes2": list(crimes_against_counts2.keys())
+        })
+    except Exception as e:
+        print(f'Faliure: {e}')
+        return {}
+
+
 # Using AWS
 @app.route('/crimes_from_address', methods=['GET'])
 def get_locations_given_address():
