@@ -28,6 +28,13 @@ function getDataFromAddress(data){
                 mapChart.sendData(res.features, res.center);
                 let crimeScoreBox = document.getElementById("crime-score-box");
                 crimeScoreBox.innerHTML = res.crimeScore;
+                let crimeScoreBoxLabel = document.getElementById("crime-score-label");
+                crimeScoreBoxLabel.innerHTML = res.crimeScoreLabel;
+
+                let crimeRateBox = document.getElementById("crime-rate-box");
+                crimeRateBox.innerHTML = res.crimeRate;
+                let crimeRateBoxLabel = document.getElementById("crime-rate-label");
+                crimeRateBoxLabel.innerHTML = res.crimeRateLabel;
             }
         });
 }
@@ -158,7 +165,7 @@ pull.addEventListener("click", function () {
                 var bar_data = [cityOne, cityTwo];
                 var layout = {
                     barmode: 'group',
-                    title: 'Crimes Committed Against Categories',
+                    title: 'Comparison of Crimes Committed',
                     xaxis: { title: 'Categories by City' },
                     yaxis: { title: 'Number of Crimes'}
                 };

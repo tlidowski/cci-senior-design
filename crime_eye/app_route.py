@@ -354,32 +354,48 @@ def get_locations_given_address():
         )
 
     engine = aws.initConnection()
-    res = aws.getCityDataGivenYears(cityName, start, end, engine)
 
+    res = aws.getCityDataGivenYears(cityName, start, end, engine)
     ret = aws.get_city_area(cityName, engine)
     SQ_of_city = ret["area"].tolist()[0]
 
-    engine.close()
-    crimeFeatures = mp.createFeatures(res, userLon, userLat, radius)
+    pop = aws.get_city_population(cityName, engine)
+    cityPop = pop["population"].tolist()[0]
 
+    crimes = aws.get_total_city_crimes(cityName, engine)
+    totalCrimes = crimes["count"].tolist()[0]
+
+    engine.close()
+
+    crimeFeatures = mp.createFeatures(res, userLon, userLat, radius)
     area_of_circle = getAreaOfCircle(radius)
     crimeScore = -1
+    crimeScoreLabel = ""
+    crimeRate = -1
+    crimeRateLabel = "per 1000 people"
 
     try:
+        crimeRate = calculateCrimeRate(cityPop, totalCrimes)
+
         total_crimes = len(crimeFeatures["inside"]) + len(crimeFeatures["outside"])
         N = area_of_circle * total_crimes / SQ_of_city
         records_in_circle = len(crimeFeatures["inside"])
         frac = (records_in_circle / N)
         if (frac > veryUnsafeThreshold):
             crimeScore = veryUnsafeScore
+            crimeScoreLabel = "Very Unsafe"
         elif (frac > unsafeThreshold):
             crimeScore = unsafeScore
+            crimeScoreLabel = "Unsafe"
         elif (frac > okThreshold):
             crimeScore = okScore
+            crimeScoreLabel = "Ok"
         elif (frac > safeThreshold):
             crimeScore = safeScore
+            crimeScoreLabel = "Safe"
         elif (frac < safeThreshold):
             crimeScore = reallySafeScore
+            crimeScoreLabel = "Very Safe"
     except Exception as e:
         print(f'Failure: {e}')
 
@@ -392,9 +408,17 @@ def get_locations_given_address():
             "feature": radiusFeature,
         },
         "features": crimeFeatures,
-        "crimeScore": crimeScore
+        "crimeScore": crimeScore,
+        "crimeScoreLabel": crimeScoreLabel,
+        "crimeRate": crimeRate,
+        "crimeRateLabel": crimeRateLabel
     })
 
+
+def calculateCrimeRate(population, total):
+    rate = total/population
+    perThousand = rate*1000
+    return round(perThousand, 2)
 
 def getAreaOfCircle(radius):
     area = 0

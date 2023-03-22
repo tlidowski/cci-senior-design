@@ -27,10 +27,20 @@
 }
 
 .score {
-    font-size: 40px;
+    font-size: 30px;
+    text-align: center;
+    padding-top: 10px;
 }
 
-
-#crime-score {
-
+.card {
+    margin-top: 15px;
 }
+
+.card-header {
+    text-align: center;
+}
+
+.scoreLabel {
+    font-size: 15px;
+    text-align: center;
+    padding-bottom: 15px;
