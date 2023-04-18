@@ -331,7 +331,8 @@ def get_bar_graph():
 @app.route('/crimes_from_address', methods=['GET'])
 def get_locations_given_address():
     cityMap = {
-        "new york": "New York City"
+        "new york": "New York City",
+        "washington" : 'Washington DC',
     }
     cityName = request.args.get('cityName')
     if cityName.lower() in cityMap.keys():
@@ -340,6 +341,7 @@ def get_locations_given_address():
 
     start = request.args.get('start')
     end = request.args.get('end')
+    dropdownCity = request.args.get('dropdownCity')
     radius = int(request.args.get('radius'))
     userLat = float(request.args.get('lat'))
     userLon = float(request.args.get('lon'))
@@ -348,9 +350,13 @@ def get_locations_given_address():
         return json.dumps(
             {"errors": ["Invalid Years"]}
         )
-    if not v.validateCity(cityName):
+    if dropdownCity == "Select":
         return json.dumps(
-            {"errors": ["No crime data for given city"]}
+            {"errors": ["Please select a city from the dropdown first"]}
+        ) 
+    if not v.validateCity(cityName, dropdownCity):
+        return json.dumps(
+            {"errors": ["Address must be in selected city"]}
         )
 
     engine = aws.initConnection()

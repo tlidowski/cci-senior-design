@@ -11,13 +11,14 @@ document.getElementById("nav-map-tab").addEventListener('shown.bs.tab', function
 function getDataFromAddress(data){
     let start = document.getElementById("start").value
     let end = document.getElementById("end").value
+    let dropdownCity = document.getElementById("city").value
     let radius = mapChart.getRadius();
     let cityName = data.city
     let lat = data.lat
     let lon = data.lon
 
     // Assuming validation on server
-    fetch(`http://127.0.0.1:5000/crimes_from_address?cityName=${cityName}&start=${start}&end=${end}&radius=${radius}&lat=${lat}&lon=${lon}`)
+    fetch(`http://127.0.0.1:5000/crimes_from_address?dropdownCity=${dropdownCity}&cityName=${cityName}&start=${start}&end=${end}&radius=${radius}&lat=${lat}&lon=${lon}`)
         .then((response) => {
             return response.json();
         })
