@@ -14,7 +14,6 @@ def validateYears(start, end):
     return True
     
 def validateCity(cityName, dropdownCity):
-    print(cityName, dropdownCity)
     return cityName.lower() == dropdownCity.lower()
 
 

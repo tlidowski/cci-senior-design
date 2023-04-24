@@ -86,96 +86,6 @@ def get_location_from_name(city):
         return [None, None]
 
 
-# Only works if server is run in the crimeeye folder: python3
-@app.route('/city_crime_data', methods=['GET'])
-def get_city_crime_data():
-    city = request.args.get('city')
-    start = request.args.get('start')
-    end = request.args.get('end')
-
-    try:
-        output = None
-        path_2020 = f'../combined_city_data/city_data-{2020}.csv'
-        path_2021 = f'../combined_city_data/city_data-{2021}.csv'
-
-        year_csvs = {"2020": path_2020,
-                     "2021": path_2021
-                     }
-
-        column_types = get_column_types()
-
-        if (start in year_csvs.keys()) and (end in year_csvs.keys()):
-            start_year_df = pd.read_csv(year_csvs[start], dtype=column_types)
-            start_year_res = apply_mask(start_year_df, 'CITY_NAME', city)
-            start_lats, start_lons = get_lat_lon(start_year_res)
-            end_year_df = []
-            end_year_res = []
-
-            if start != end:
-                end_year_df = pd.read_csv(year_csvs[end], dtype=column_types)
-                end_year_res = apply_mask(end_year_df, 'CITY_NAME', city)
-                end_lats, end_lons = get_lat_lon(start_year_res)
-
-            # res = None
-            if len(end_year_res) != 0:
-                res = pd.concat([start_year_res, end_year_res], axis=0)
-                lats = start_lats + end_lats
-                lons = start_lons + end_lons
-
-            else:
-                res = start_year_res
-                lats = start_lats
-                lons = start_lons
-
-        return res.to_json(orient='records')
-    except Exception as e:
-        print(e)
-        return {}
-
-
-@app.route('/city_geo_json', methods=['GET'])
-def get_city_geo_data():
-    city = request.args.get('city')
-    start = request.args.get('start')
-    end = request.args.get('end')
-    geo_json = {"type": "FeatureCollection", "features": []}
-    try:
-        path_2020 = f'../combined_city_data/city_data-{2020}.csv'
-        path_2021 = f'../combined_city_data/city_data-{2021}.csv'
-
-        year_csvs = {"2020": path_2020,
-                     "2021": path_2021
-                     }
-
-        column_types = get_column_types()
-
-        if (start in year_csvs.keys()) and (end in year_csvs.keys()):
-            start_year_df = pd.read_csv(year_csvs[start], dtype=column_types)
-            start_year_res = apply_mask(start_year_df, 'CITY_NAME', city)
-
-            end_year_df = []
-            end_year_res = []
-
-            if start != end:
-                end_year_df = pd.read_csv(year_csvs[end], dtype=column_types)
-                end_year_res = apply_mask(end_year_df, 'CITY_NAME', city)
-
-            # res = None
-            if len(end_year_res) != 0:
-                res = pd.concat([start_year_res, end_year_res], axis=0)
-            else:
-                res = start_year_res
-            for i, row in res.iterrows():
-                if not (np.isnan(row["LONGITUDE"]) and np.isnan(row["LATITUDE"])):
-                    template = {"type": "Feature", "geometry": {"type": "Point"}}
-                    template["geometry"]["coordinates"] = [row["LONGITUDE"], row["LATITUDE"]]
-                    geo_json["features"].append(template)
-        return json.dumps(geo_json)
-    except:
-        print("Failure")
-        return {}
-
-
 @app.route('/crimes_pie_chart', methods=['GET'])
 def get_pie_chart():
     # pie chart using crime codes 
@@ -373,6 +283,7 @@ def get_locations_given_address():
 
     engine.close()
 
+    
     crimeFeatures = mp.createFeatures(res, userLon, userLat, radius)
     area_of_circle = getAreaOfCircle(radius)
     crimeScore = -1
@@ -403,7 +314,9 @@ def get_locations_given_address():
             crimeScore = reallySafeScore
             crimeScoreLabel = "Very Safe"
     except Exception as e:
-        print(f'Failure: {e}')
+        return json.dumps({
+        "errors": [e],
+    })
 
     radiusFeature = mp.generateRadiusGeoJson((userLon, userLat), radius)
     # Todo, generate list based on crime type as well as (or instead of) within radius
@@ -433,20 +346,6 @@ def getAreaOfCircle(radius):
     else:
         area = math.pi * (float(radius) ** 2)
     return area
-
-
-def getRecordsInCircle(lat, long, area_of_circle, allRecords):
-    return 60
-
-
-def getSQOfCity(city):
-    sq_of_city = 500000
-    return sq_of_city
-
-
-def getTotalCrimes(city):
-    total_crimes = 100
-    return total_crimes
 
 @app.route('/')
 def index():

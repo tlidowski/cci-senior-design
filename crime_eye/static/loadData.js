@@ -8,14 +8,20 @@ document.getElementById("nav-map-tab").addEventListener('shown.bs.tab', function
 
 
 // Takes in location from Geoapify address and will send data to mapchart
-function getDataFromAddress(data){
+pull.addEventListener("click", function () {
+    let cityName = mapChart.cityName;
+    // Don't get map data if there isn't an address
+    if (cityName == null){
+        return
+    }
+    let lat = mapChart.centerLat;
+    let lon = mapChart.centerLon;
+
     let start = document.getElementById("start").value
     let end = document.getElementById("end").value
     let dropdownCity = document.getElementById("city").value
     let radius = mapChart.getRadius();
-    let cityName = data.city
-    let lat = data.lat
-    let lon = data.lon
+
 
     // Assuming validation on server
     fetch(`http://127.0.0.1:5000/crimes_from_address?dropdownCity=${dropdownCity}&cityName=${cityName}&start=${start}&end=${end}&radius=${radius}&lat=${lat}&lon=${lon}`)
@@ -38,7 +44,7 @@ function getDataFromAddress(data){
                 crimeRateBoxLabel.innerHTML = res.crimeRateLabel;
             }
         });
-}
+})
 
 
 // pie graph

@@ -1,11 +1,15 @@
 class MapChart{
     constructor(divName){
+        // For storing info from address lookup
+        this.cityName = null
+        this.centerLat = null
+        this.centerLon = null
+
         this.symbolLayerId;
         this.divName = divName;
         this.inFeatures = [];
         this.outFeatures = [];
         this.radius = 3; // Units in pixels
-        // Should probably be separated into its own class
         mapboxgl.accessToken = 'pk.eyJ1Ijoic3JhODQiLCJhIjoiY2w4ZjNmcXk4MDllbDQwbnpoOXJwa2VsZSJ9.OsLldCR-T9CjYaBE5Fa4OA';
 
         this.map = new mapboxgl.Map({
@@ -88,8 +92,18 @@ class MapChart{
                 'type': 'circle',
                 'source': 'inPoints',
                 "paint": {
-                    "circle-color": "red",
-                    "circle-opacity": 0.2
+                    "circle-color": {
+                        "property": 'crimeType',
+                        "type": 'categorical',
+                        "stops": [
+                          ['Property', 'white'],
+                          ['Person', 'blue'],
+                          ['Society', 'yellow'],
+                          ["Other", "brown"],
+                          ["NotFound", "black"]
+                        ]
+                    },
+                    "circle-opacity": 0.3
                     },
                 },
                 this.symbolLayerId);
@@ -101,8 +115,18 @@ class MapChart{
                 'type': 'circle',
                 'source': 'outPoints',
                 "paint": {
-                    "circle-color": "yellow",
-                    "circle-opacity": 0.2,
+                    "circle-color": {
+                        "property": 'crimeType',
+                        "type": 'categorical',
+                        "stops": [
+                          ['Property', 'white'],
+                          ['Person', 'blue'],
+                          ['Society', 'yellow'],
+                          ["Other", "brown"],
+                          ["NotFound", "black"]
+                        ]
+                    },
+                    "circle-opacity": 0.05,
                     }
                 },
                 this.symbolLayerId);
@@ -129,6 +153,12 @@ class MapChart{
 
         // Results of data should be sent from server
 
+    }
+
+    setAddressData(data){
+        this.cityName = data.city
+        this.centerLat = data.lat
+        this.centerLon = data.lon
     }
 }
 
