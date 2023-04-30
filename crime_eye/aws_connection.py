@@ -12,7 +12,8 @@ def connectAWS():
     engine = psycopg2.connect(
         database=os.getenv("DATABASE_NAME"),
         user=os.getenv("DATABASE_USERNAME"),
-        password=input("Enter Password Please: "),
+        #password=input("Enter Password Please: "),
+        password="citycrime22",
         host=os.getenv("DATABASE_HOST"),
         port=os.getenv("DATABASE_PORT"),
     )
@@ -31,8 +32,10 @@ def  get_total_city_crimes(cityName, engine):
     query = 'select count(*) from all_crime where city_name=' + "'" + cityName + "'"
     return pd.read_sql(query, con=engine)
 
-def get_crime_descriptions_and_counts (cityName, engine):
-    query = "select fbi_crime_code, count(fbi_crime_code) AS Crime_Count from all_crime where city_name = '" + cityName + "' group by fbi_crime_code"
+def get_crime_descriptions_and_counts (cityName, engine, start, end):
+    start = f"'{start}0101'"
+    end = f"'{end}1231'"
+    query = "select fbi_crime_code, count(fbi_crime_code) AS Crime_Count from all_crime where city_name = '" + cityName + "'" + f' AND date >= {start} and date<= {end}' + " group by fbi_crime_code"
     return pd.read_sql(query, con=engine)
 
 def getCityDataGivenYears(cityName, start, end, engine):

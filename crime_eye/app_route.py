@@ -121,7 +121,7 @@ def get_pie_chart():
     end = request.args.get('end')
     try:
         engine = aws.initConnection()
-        res = aws.get_crime_descriptions_and_counts(city, engine)
+        res = aws.get_crime_descriptions_and_counts(city, engine, start, end)
 
         engine.close()
 
