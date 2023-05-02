@@ -186,6 +186,8 @@ def get_line_graph():
 def get_bar_graph():
     city = request.args.get('city')
     city2 = request.args.get('city2')
+    start = request.args.get('start')
+    end = request.args.get('end')
 
     crimes_against = {
         'Property': ['200', '510', '220', '250', '510', '290', '250', '270', '210', '26', '26A', '26B', '26C', '26D',
@@ -198,8 +200,8 @@ def get_bar_graph():
     }
     try:
         engine = aws.initConnection()
-        res = aws.get_crime_descriptions_and_counts(city, engine)
-        res2 = aws.get_crime_descriptions_and_counts(city2, engine)
+        res = aws.get_crime_descriptions_and_counts(city, engine, start, end)
+        res2 = aws.get_crime_descriptions_and_counts(city2, engine, start, end)
         engine.close()
 
         crimes_against_counts = {
