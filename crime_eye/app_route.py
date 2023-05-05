@@ -86,6 +86,7 @@ def get_location_from_name(city):
         return [None, None]
 
 
+
 @app.route('/crimes_pie_chart', methods=['GET'])
 def get_pie_chart():
     # pie chart using crime codes 
@@ -116,6 +117,34 @@ def get_pie_chart():
         'Other': ['90', '90A', '90B', '90C', '90D', '90E', '90F', '90G', '90H', '90I', '90J', '90Z']
     }
 
+
+    property_crimes = {
+        'Arson': ['200'],
+        'Burglary': ['220'],
+        'Counterfeiting/Forgery': ['250'],
+        'Vandalism of Property': ['290'],
+        'Embezzlement': ['270'],
+        'Extortion/Blackmail': ['210'],
+        'Fraud Offenses': ['26', '26A', '26B', '26C', '26D', '26E'],
+        'Larceny-Theft': ['23', '23A', '23B', '23C', '23D', '23E', '23F', '23G', '23H'],
+        'Vehicle-Theft': ['240'],
+        'Stolen Property Offenses': ['280'],
+    }
+    person_crimes = {
+        'Homicide': ['09', '09A', '09B', '09C'],
+        'Kidnapping/Abduction': ['100'],
+        'Sex Offenses, Forcible': ['11', '11A', '11B', '11C', '11D'],
+        'Sex Offenses, Nonforcible': ['36A', '36B'],
+        'Armed Robbery': ['120'],
+        'Assault': ['13', '13A', '13B', '13C']
+    }
+    society_crimes = {
+        'Drug/Narcotic Offenses': ['35', '35A', '35B'],
+        'Gambling Offenses': ['39', '39A', '39B', '39C', '39D'],
+        'Pornography': ['370'],
+        'Prostitution': ['40', '40A', '40B'],
+        'Weapon Law Violations': ['520'],
+    }
     city = request.args.get('city')
     start = request.args.get('start')
     end = request.args.get('end')
@@ -124,39 +153,37 @@ def get_pie_chart():
         res = aws.get_crime_descriptions_and_counts(city, engine, start, end)
 
         engine.close()
+        propertyCounts = getCounts(property_crimes, res)
+        personCounts = getCounts(person_crimes, res)
+        societyCounts = getCounts(society_crimes, res)
 
-        crimes_and_counts = {
-        }
-        count_sum = sum(res['crime_count'])
-        for crime_codes, count in zip(res['fbi_crime_code'], res['crime_count']):
-            if crime_codes == None:
-                continue
-            for crime_code in crime_codes:
-                for key, values in zip(crime_descriptions.keys(), crime_descriptions.values()):
-                    if crime_code in values:
-                        if key in crimes_and_counts.keys():
-                            crimes_and_counts[key] += count
-                        else:
-                            crimes_and_counts[key] = count
-
-        keys_to_delete = []
-        for crime, count in zip(crimes_and_counts.keys(), crimes_and_counts.values()):
-            if crime == 'Other':
-                continue
-            if (count / count_sum * 100) <= .5:
-                crimes_and_counts['Other'] += count
-                keys_to_delete.append(crime)
-
-        for crime in keys_to_delete:
-            del crimes_and_counts[crime]
         return json.dumps({
-            "counts": list(crimes_and_counts.values()),
-            "crimes": list(crimes_and_counts.keys())
+            "property_counts": list(propertyCounts.values()),
+            "property_crimes": list(propertyCounts.keys()),
+            "person_counts": list(personCounts.values()),
+            "person_crimes": list(personCounts.keys()),
+            "society_counts": list(societyCounts.values()),
+            "society_crimes": list(societyCounts.keys())
         })
     except Exception as e:
         print(f'Faliure: {e}')
         return {}
 
+def getCounts(crimes, res):
+    crimes_and_counts = {}
+    count_sum = sum(res['crime_count'])
+    for crime_codes, count in zip(res['fbi_crime_code'], res['crime_count']):
+        if crime_codes == None:
+            continue
+        for crime_code in crime_codes:
+            for key, values in zip(crimes.keys(), crimes.values()):
+                if crime_code in values:
+                    if key in crimes_and_counts.keys():
+                        crimes_and_counts[key] += count
+                    else:
+                        crimes_and_counts[key] = count
+
+    return crimes_and_counts
 
 @app.route('/crimes_line_graph', methods=['GET'])
 def get_line_graph():
