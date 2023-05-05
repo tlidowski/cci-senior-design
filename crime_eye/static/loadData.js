@@ -30,20 +30,18 @@ function generateGraphs() {
   generatePieChart(city, start, end, otherCities);
   generateLineGraph(city, start, end, otherCities);
   generateBarGraph(city, start, end, otherCities);
-  generateStackedBarGraph(city, start, end, otherCities);
+
+  //temporary
+  let cityCompareInput2 = document.getElementById("cityCompare2");
+  let otherCities2 = cityCompareInput2.value;
+  //
+  generateStackedBarGraph(city, start, end, otherCities2);
 
   // Reset Map Address
   mapChart.cityName = null;
 }
 
 pull.addEventListener("click", generateGraphs);
-
-let pull2 = document.getElementById("pull2");
-pull2.addEventListener("click", function () {
-  $(document).ready(function () {
-    generateStackedBarGraph();
-  });
-});
 
 function generateMap(city, start, end, otherCities) {
   let cityName = mapChart.cityName;
@@ -260,21 +258,25 @@ function getStackedBarTraces(xVals, yVals, name) {
   return trace;
 }
 
-function generateStackedBarGraph(city, start, end, otherCities) {
-  // ---------------START DEMO DATA---------------
-  city = "Baltimore";
-  start = 2020;
-  end = 2021;
-  otherCities = ["Austin", "Philadelphia"];
-  // ---------------END DEMO DATA---------------
+function isString(s) {
+  return isinstance(s, str);
+}
 
-  if (otherCities == null) {
-    otherCities = [];
+function generateStackedBarGraph(city, start, end, otherCities) {
+  let otherCitiesList = [];
+  if (otherCities != null) {
+    otherCities = otherCities.split(",");
+    let i = 0;
+    while (i < otherCities.length) {
+      otherCities[i] = otherCities[i].trim();
+      i += 1;
+    }
+    otherCitiesList.push(...otherCities);
   }
 
   fetch(
     `http://127.0.0.1:5000/crimes_stacked_bar_graph?city=${city}&start=${start}&end=${end}&otherCities=${JSON.stringify(
-      { other_cities: otherCities }
+      { other_cities: otherCitiesList }
     )}`
   )
     .then((response) => {
