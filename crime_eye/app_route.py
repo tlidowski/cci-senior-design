@@ -239,6 +239,75 @@ def get_bar_graph():
         return {}
 
 
+cityNames = [
+    "Austin",
+    "Baltimore",
+    "Boston",
+    "Charlotte",
+    "Chicago",
+    "Denver",
+    "Detroit",
+    "Los Angeles",
+    "New York City",
+    "Philadelphia",
+    "Seattle",
+    "Washington DC",
+];
+
+citiesInclusions = {}
+
+def initializeCitiesInclusions():
+    global citiesInclusions 
+    citiesInclusions = dict.fromkeys(cityNames, False)
+initializeCitiesInclusions()
+
+crimes_against = {
+        'Property': ['200', '510', '220', '250', '510', '290', '250', '270', '210', '26', '26A', '26B', '26C', '26D',
+                     '26E', '23', '23A', '23B', '23C', '23D', '23E', '23F', '23G', '23H', '240', '90A'],
+        'Person': ['13', '13A', '13B', '13C', '39', '09', '09A', '09B', '09C', '100', '11', '11A', '11B', '11C',
+                   '11D', '36', '36B'],
+        'Society': ['35', '35A', '35B', '39', '39A', '39B', '39C', '39D', '40', '40A', '40B', '90B', '90C', '90D',
+                    '90E', '90F', '90G', '90H', '90J', '370'],
+        'Other': ['90z', '90Z', '90I']
+    }
+
+@app.route('/crimes_stacked_bar_graph', methods=['GET'])
+def get_stacked_bar_graph():
+    citiesList = []
+
+    city = request.args.get('city')
+    start = request.args.get('start')
+    end = request.args.get('end')
+    otherCitiesDict = json.loads(request.args.get('otherCities'))
+    otherCities = []
+    otherCities = otherCitiesDict["other_cities"]
+
+    citiesList.append(city)
+    citiesList.extend(otherCities)
+
+    engine = aws.initConnection()
+    crimes_against_counts_per_city = {}
+
+    for city in citiesList:
+        if (citiesInclusions[city] == False):
+            res = aws.get_crime_descriptions_and_counts(city, engine, start, end)
+            crimes_against_counts_per_city[city] = {}
+            citiesInclusions[city] == True
+            #-----------------------
+            codeCountZip = zip(res['fbi_crime_code'], res['crime_count'])
+            for crime_codes, count in codeCountZip:
+                if crime_codes == None:
+                    continue
+                for crime_code in crime_codes:
+                    for category, codes in zip(crimes_against.keys(), crimes_against.values()):
+                        if crime_code in codes:
+                            if category in crimes_against_counts_per_city[city].keys():
+                                crimes_against_counts_per_city[city][category] += count
+                            else:
+                                crimes_against_counts_per_city[city][category] = count
+    engine.close()
+    return json.dumps(crimes_against_counts_per_city)
+
 # Using AWS
 @app.route('/crimes_from_address', methods=['GET'])
 def get_locations_given_address():
