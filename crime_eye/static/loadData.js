@@ -273,7 +273,6 @@ function generateStackedBarGraph(city, start, end, otherCities) {
     }
     otherCitiesList.push(...otherCities);
   }
-  console.log("otherCitiesList", otherCitiesList);
 
   fetch(
     `http://127.0.0.1:5000/crimes_stacked_bar_graph?city=${city}&start=${start}&end=${end}&otherCities=${JSON.stringify(
