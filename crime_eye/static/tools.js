@@ -12,3 +12,4 @@ function insert_error(message){
     error.appendChild(button);
     errorContainer.appendChild(error);
 }
+

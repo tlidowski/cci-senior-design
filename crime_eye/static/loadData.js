@@ -22,6 +22,11 @@ function generateGraphs() {
 
   // TODO Do input validation here
 
+  if (!start || !end ||!city){
+    insert_error("Need all parameters please");
+    return;
+  }
+
   // TEMPORARY LOGIC
   if (otherCities == "Select") {
     otherCities = null;
@@ -214,7 +219,7 @@ function getBarModeLayout(barmode, title, xAxisTitle, yAxisTitle) {
 function generateBarGraph(city, start, end, otherCities) {
   console.log(`other city ${otherCities}`);
   if (otherCities != null) {
-    city2 = otherCities; // REPLACE with correct multi-city logic
+    let city2 = otherCities; // REPLACE with correct multi-city logic
     fetch(
       `http://127.0.0.1:5000/crimes_bar_graph?city=${city}&city2=${city2}&start=${start}&end=${end}`
     )
