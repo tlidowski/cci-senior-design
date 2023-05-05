@@ -99,31 +99,6 @@
                   </select>
                 </div>
               </div>
-              <div class="row">
-                <div class="input-group">
-                  <button class="btn btn-outline-dark" id="pull">Search</button>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="row" style="height: 160px">
-            <div class="col-sm-6">
-              <div class="card">
-                <h5 class="card-header">Safety Score</h5>
-                <h1 class="score" id="crime-score-box"></h1>
-                <h6 class="scoreLabel" id="crime-score-label"></h6>
-              </div>
-            </div>
-            <div class="col-sm-6">
-              <div class="card">
-                <h5 class="card-header">City Crime Rate</h5>
-                <h1 class="score" id="crime-rate-box"></h1>
-                <h6 class="scoreLabel" id="crime-rate-label"></h6>
-              </div>
-            </div>
-          </div>
-          <div class="row">
-            <div class="col">
               <div class="card">
                 <div class="card-header">
                   <h5>Compare Cities</h5>
@@ -133,7 +108,7 @@
                     <select
                       class="selectpicker w-100"
                       multiple
-                      id="multi-select"
+                      id="city-multi-select"
                     >
                       <option>Austin</option>
                       <option>Baltimore</option>
@@ -149,14 +124,75 @@
                       <option>Washington DC</option>
                     </select>
                   </div>
-                  <div class="row">
+                  <!-- <div class="row">
                     <div class="input-group">
                       <button class="btn btn-outline-dark w-100" id="compare">
                         Compare
                       </button>
                     </div>
-                  </div>
+                  </div> -->
                 </div>
+              </div>
+              <div class="row">
+                <div class="input-group">
+                  <button class="btn btn-outline-dark" id="pull">Search</button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- <div class="row"> -->
+          <!-- <div class="col"> -->
+
+          <!-- <div class="card">
+            <div class="card-header">
+              <h5>Compare Cities</h5>
+            </div>
+            <div class="card-body">
+              <div class="row mb-3">
+                <select
+                  class="selectpicker w-100"
+                  multiple
+                  id="city-multi-select"
+                >
+                  <option>Austin</option>
+                  <option>Baltimore</option>
+                  <option>Boston</option>
+                  <option>Charlotte</option>
+                  <option>Chicago</option>
+                  <option>Denver</option>
+                  <option>Detroit</option>
+                  <option>Los Angeles</option>
+                  <option>New York City</option>
+                  <option>Philadelphia</option>
+                  <option>Seattle</option>
+                  <option>Washington DC</option>
+                </select>
+              </div>
+              <div class="row">
+                <div class="input-group">
+                  <button class="btn btn-outline-dark w-100" id="compare">
+                    Compare
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div> -->
+
+          <!-- </div> -->
+          <!-- </div> -->
+          <div class="row" style="height: 160px">
+            <div class="col-sm-6">
+              <div class="card">
+                <h5 class="card-header">Safety Score</h5>
+                <h1 class="score" id="crime-score-box"></h1>
+                <h6 class="scoreLabel" id="crime-score-label"></h6>
+              </div>
+            </div>
+            <div class="col-sm-6">
+              <div class="card">
+                <h5 class="card-header">City Crime Rate</h5>
+                <h1 class="score" id="crime-rate-box"></h1>
+                <h6 class="scoreLabel" id="crime-rate-label"></h6>
               </div>
             </div>
           </div>
@@ -285,28 +321,6 @@
                   role="tabpanel"
                   aria-labelledby="nav-bar-graph-tab"
                 >
-                  <div class="input-group">
-                    <div class="input-group-text">Compare Another City</div>
-                    <select
-                      class="form-control"
-                      id="cityCompare"
-                      placeholder="City Name"
-                    >
-                      <option selected disabled>Select</option>
-                      <option>Austin</option>
-                      <option>Baltimore</option>
-                      <option>Boston</option>
-                      <option>Charlotte</option>
-                      <option>Chicago</option>
-                      <option>Denver</option>
-                      <option>Detroit</option>
-                      <option>Los Angeles</option>
-                      <option>New York City</option>
-                      <option>Philadelphia</option>
-                      <option>Seattle</option>
-                      <option>Washington DC</option>
-                    </select>
-                  </div>
                   <div id="barGraph" class="mapType"></div>
                 </div>
                 <div
@@ -315,28 +329,6 @@
                   role="tabpanel"
                   aria-labelledby="nav-stacked-bar-graph-tab"
                 >
-                  <div class="input-group">
-                    <div class="input-group-text">Compare Another City</div>
-                    <select
-                      class="form-control"
-                      id="cityCompare2"
-                      placeholder="City Name"
-                    >
-                      <option selected disabled>Select</option>
-                      <option>Austin</option>
-                      <option>Baltimore</option>
-                      <option>Boston</option>
-                      <option>Charlotte</option>
-                      <option>Chicago</option>
-                      <option>Denver</option>
-                      <option>Detroit</option>
-                      <option>Los Angeles</option>
-                      <option>New York City</option>
-                      <option>Philadelphia</option>
-                      <option>Seattle</option>
-                      <option>Washington DC</option>
-                    </select>
-                  </div>
                   <div id="stacked-bar-graph" class="mapType"></div>
                 </div>
               </div>

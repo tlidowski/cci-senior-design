@@ -1,7 +1,7 @@
 let table_parent = document.getElementById("table_parent");
 const pull = document.getElementById("pull");
 let mapChart;
-let cityDropdown = document.getElementById("city-dropdown");
+let compareBtn = document.getElementById("compare");
 
 document
   .getElementById("nav-map-tab")
@@ -12,30 +12,28 @@ document
 const cityInput = document.getElementById("city");
 const startInput = document.getElementById("start");
 const endInput = document.getElementById("end");
-const cityCompareInput = document.getElementById("cityCompare");
+// const cityCompareInput = document.getElementById("cityCompare");
+const cityCompareInput = document.getElementsByClassName(
+  "filter-option-inner-inner"
+);
 
 function generateGraphs() {
   let city = cityInput.value;
   let start = startInput.value;
   let end = endInput.value;
-  let otherCities = cityCompareInput.value;
+  let otherCities = cityCompareInput[0].innerHTML;
 
   // TODO Do input validation here
 
   // TEMPORARY LOGIC
-  if (otherCities == "Select") {
-    otherCities = null;
-  }
+  // if (otherCities == "Select") {
+  //   otherCities = null;
+  // }
   generateMap(city, start, end, otherCities);
   generatePieChart(city, start, end, otherCities);
   generateLineGraph(city, start, end, otherCities);
   generateBarGraph(city, start, end, otherCities);
-
-  //temporary
-  let cityCompareInput2 = document.getElementById("cityCompare2");
-  let otherCities2 = cityCompareInput2.value;
-  //
-  generateStackedBarGraph(city, start, end, otherCities2);
+  generateStackedBarGraph(city, start, end, otherCities);
 
   // Reset Map Address
   mapChart.cityName = null;
@@ -214,7 +212,13 @@ function getBarModeLayout(barmode, title, xAxisTitle, yAxisTitle) {
 function generateBarGraph(city, start, end, otherCities) {
   console.log(`other city ${otherCities}`);
   if (otherCities != null) {
-    city2 = otherCities; // REPLACE with correct multi-city logic
+    let city2 = otherCities; // REPLACE with correct multi-city logic
+    //See my generateStackedBarGraph function. It calls buildOtherCitiesList, which
+    //constructs list of other cities by splitting the input string by ",", and trimming whitespace of each resulting list item.
+    //Adjust your fetch request so that you JSON.stringify as I did,
+    //and then look at my app_route function if you want to see how I unpacked the stringified object. json.parse didn't work for me; had to use json.loads
+    console.log("bar othercit", otherCities);
+
     fetch(
       `http://127.0.0.1:5000/crimes_bar_graph?city=${city}&city2=${city2}&start=${start}&end=${end}`
     )
@@ -262,7 +266,7 @@ function isString(s) {
   return isinstance(s, str);
 }
 
-function generateStackedBarGraph(city, start, end, otherCities) {
+function buildOtherCitiesList(otherCities) {
   let otherCitiesList = [];
   if (otherCities != null) {
     otherCities = otherCities.split(",");
@@ -273,7 +277,12 @@ function generateStackedBarGraph(city, start, end, otherCities) {
     }
     otherCitiesList.push(...otherCities);
   }
+  return otherCitiesList;
+}
 
+function generateStackedBarGraph(city, start, end, otherCities) {
+  let otherCitiesList = buildOtherCitiesList(otherCities);
+  console.log("stack othercit", otherCitiesList);
   fetch(
     `http://127.0.0.1:5000/crimes_stacked_bar_graph?city=${city}&start=${start}&end=${end}&otherCities=${JSON.stringify(
       { other_cities: otherCitiesList }
