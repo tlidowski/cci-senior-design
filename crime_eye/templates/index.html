@@ -305,7 +305,9 @@
                   role="tabpanel"
                   aria-labelledby="nav-pie-chart-tab"
                 >
-                  <div id="pieChart"></div>
+                  <div id="propertyPieChart"></div>
+                  <div id="personPieChart"></div>
+                  <div id="societyPieChart"></div>
                 </div>
                 <div
                   class="tab-pane fade"
@@ -340,6 +342,7 @@
     <script src="{{ url_for('static', filename='loadData.js') }}"></script>
     <script src="{{ url_for('static', filename='mapChart.js') }}"></script>
     <script src="{{ url_for('static', filename='addressLookup.js') }}"></script>
+        <script src="{{ url_for('static', filename='tools.js') }}"></script>
     <script
       src="https://code.jquery.com/jquery-3.6.0.min.js"
       integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="

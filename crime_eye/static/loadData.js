@@ -25,6 +25,11 @@ function generateGraphs() {
 
   // TODO Do input validation here
 
+  if (!start || !end ||!city){
+    insert_error("Need all parameters please");
+    return;
+  }
+
   // TEMPORARY LOGIC
   // if (otherCities == "Select") {
   //   otherCities = null;
@@ -90,20 +95,33 @@ function generatePieChart(city, start, end, otherCities) {
         return response.json();
       })
       .then((data) => {
-        $(document).ready(function () {
-          // console.log(data.counts);
-          var pieChart_data = [
-            {
+        $(document).ready(function (){
+            // console.log(data.counts);
+            var propertyPieChart_data = [{
+                type: "pie",
+                title: "Property Crimes",
+                values: data.property_counts,
+                labels: data.property_crimes
+            }];
+            var personPieChart_data = [{
+                type: "pie",
+                title: "Person Crimes",
+                values: data.person_counts,
+                labels: data.person_crimes
+            }];
+            var societyPieChart_data = [{
               type: "pie",
-              values: data.counts,
-              labels: data.crimes,
-            },
-          ];
-          var layout = {
-            height: 800,
-            width: 800,
-          };
-          Plotly.newPlot("pieChart", pieChart_data, layout);
+              title: "Society Crimes",
+              values: data.society_counts,
+              labels: data.society_crimes
+          }];
+            var layout = {
+                height: 600,
+                width: 600
+              };
+            Plotly.newPlot('propertyPieChart',propertyPieChart_data, layout);
+            Plotly.newPlot('personPieChart', personPieChart_data, layout);
+            Plotly.newPlot('societyPieChart', societyPieChart_data, layout);
         });
       });
   }
@@ -213,12 +231,6 @@ function generateBarGraph(city, start, end, otherCities) {
   console.log(`other city ${otherCities}`);
   if (otherCities != null) {
     let city2 = otherCities; // REPLACE with correct multi-city logic
-    //See my generateStackedBarGraph function. It calls buildOtherCitiesList, which
-    //constructs list of other cities by splitting the input string by ",", and trimming whitespace of each resulting list item.
-    //Adjust your fetch request so that you JSON.stringify as I did,
-    //and then look at my app_route function if you want to see how I unpacked the stringified object. json.parse didn't work for me; had to use json.loads
-    console.log("bar othercit", otherCities);
-
     fetch(
       `http://127.0.0.1:5000/crimes_bar_graph?city=${city}&city2=${city2}&start=${start}&end=${end}`
     )
