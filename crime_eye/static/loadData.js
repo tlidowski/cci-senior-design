@@ -25,13 +25,13 @@ function generateGraphs() {
 
   // TODO Do input validation here
 
-  if (!start || !end ||!city){
+  if (!start || !end || !city) {
     insert_error("Need all parameters please");
     return;
   }
 
   // TEMPORARY LOGIC
-  // if (otherCities == "Select") {
+  // if (otherCities == "Select City") {
   //   otherCities = null;
   // }
   generateMap(city, start, end, otherCities);
@@ -95,33 +95,39 @@ function generatePieChart(city, start, end, otherCities) {
         return response.json();
       })
       .then((data) => {
-        $(document).ready(function (){
-            // console.log(data.counts);
-            var propertyPieChart_data = [{
-                type: "pie",
-                title: "Property Crimes",
-                values: data.property_counts,
-                labels: data.property_crimes
-            }];
-            var personPieChart_data = [{
-                type: "pie",
-                title: "Person Crimes",
-                values: data.person_counts,
-                labels: data.person_crimes
-            }];
-            var societyPieChart_data = [{
+        $(document).ready(function () {
+          // console.log(data.counts);
+          var propertyPieChart_data = [
+            {
+              type: "pie",
+              title: "Property Crimes",
+              values: data.property_counts,
+              labels: data.property_crimes,
+            },
+          ];
+          var personPieChart_data = [
+            {
+              type: "pie",
+              title: "Person Crimes",
+              values: data.person_counts,
+              labels: data.person_crimes,
+            },
+          ];
+          var societyPieChart_data = [
+            {
               type: "pie",
               title: "Society Crimes",
               values: data.society_counts,
-              labels: data.society_crimes
-          }];
-            var layout = {
-                height: 600,
-                width: 600
-              };
-            Plotly.newPlot('propertyPieChart',propertyPieChart_data, layout);
-            Plotly.newPlot('personPieChart', personPieChart_data, layout);
-            Plotly.newPlot('societyPieChart', societyPieChart_data, layout);
+              labels: data.society_crimes,
+            },
+          ];
+          var layout = {
+            height: 600,
+            width: 600,
+          };
+          Plotly.newPlot("propertyPieChart", propertyPieChart_data, layout);
+          Plotly.newPlot("personPieChart", personPieChart_data, layout);
+          Plotly.newPlot("societyPieChart", societyPieChart_data, layout);
         });
       });
   }
