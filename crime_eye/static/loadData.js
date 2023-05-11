@@ -31,9 +31,9 @@ function generateGraphs() {
   }
 
   // TEMPORARY LOGIC
-  // if (otherCities == "Select City") {
-  //   otherCities = null;
-  // }
+  if (otherCities === "Nothing selected") {
+    otherCities = null;
+  }
   generateMap(city, start, end, otherCities);
   generatePieChart(city, start, end, otherCities);
   generateLineGraph(city, start, end, otherCities);
@@ -74,9 +74,9 @@ function generateMap(city, start, end, otherCities) {
         console.log(`Error: ${res.errors[0]}`);
       } else {
         mapChart.sendData(res.features, res.center);
-        let crimeScoreBox = document.getElementById("crime-score-box");
+        let crimeScoreBox = document.getElementById("safety-score-box");
         crimeScoreBox.innerHTML = res.crimeScore;
-        let crimeScoreBoxLabel = document.getElementById("crime-score-label");
+        let crimeScoreBoxLabel = document.getElementById("safety-score-label");
         crimeScoreBoxLabel.innerHTML = res.crimeScoreLabel;
 
         let crimeRateBox = document.getElementById("crime-rate-box");
@@ -240,7 +240,7 @@ function getBarModeLayout(barmode, title, xAxisTitle, yAxisTitle) {
 }
 
 function generateBarGraph(city, start, end, otherCities) {
-  console.log(`other city ${otherCities}`);
+  console.log(`bar other ${otherCities}`);
   if (otherCities != null) {
     let city2 = otherCities; // REPLACE with correct multi-city logic
     fetch(
@@ -306,7 +306,6 @@ function buildOtherCitiesList(otherCities) {
 
 function generateStackedBarGraph(city, start, end, otherCities) {
   let otherCitiesList = buildOtherCitiesList(otherCities);
-  console.log("stack othercit", otherCitiesList);
   fetch(
     `http://127.0.0.1:5000/crimes_stacked_bar_graph?city=${city}&start=${start}&end=${end}&otherCities=${JSON.stringify(
       { other_cities: otherCitiesList }
@@ -394,9 +393,9 @@ function getMonthName(monthNum) {
 //                 console.log(`Error: ${res.errors[0]}`)
 //             }else{
 //                 mapChart.sendData(res.features, res.center);
-//                 let crimeScoreBox = document.getElementById("crime-score-box");
+//                 let crimeScoreBox = document.getElementById("safety-score-box");
 //                 crimeScoreBox.innerHTML = res.crimeScore;
-//                 let crimeScoreBoxLabel = document.getElementById("crime-score-label");
+//                 let crimeScoreBoxLabel = document.getElementById("safety-score-label");
 //                 crimeScoreBoxLabel.innerHTML = res.crimeScoreLabel;
 
 //                 let crimeRateBox = document.getElementById("crime-rate-box");
