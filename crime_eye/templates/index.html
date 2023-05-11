@@ -35,21 +35,26 @@
       href="{{ url_for('static', filename='css/styles.css') }}"
     />
   </head>
-  <body>
-    <div class="container">
+  <body style="background-color:black">
+    <div class="container" >
       <br />
       <div class="header">
-        <h2>Crime Eye</h2>
-        <h5>Keep Your Safety in View</h5>
+        <div class="flex-container">
+          <img src="static/images/crime-eye.png" style="width: 12%;
+        height: 12%;">
+        <h1 style="color:white; font-size: 80px;">Crime Eye</h1>
+        </div>
+        <div class="break"></div>
+        <h3 style="color:white; align-self: center;">Keep Your Safety in View</h3>
       </div>
       <br />
       <div class="row">
-        <div class="col" id="error"></div>
+        <div class="col" id="error" style="color:white"></div>
       </div>
       <div>
-        <div class="card">
+        <div class="card" style=>
           <div class="card-header">
-            <h5>Search Criteria</h5>
+            <h5>Find Crime</h5>
           </div>
           <div class="card-body flex-container">
             <div class="flex-item">
@@ -72,26 +77,20 @@
               </select>
             </div>
             <div class="flex-item">
-              <!-- <div class="input-group"> -->
-              <!-- <div class="input-group-text w-25">Start Year</div> -->
               <input
                 type="text"
                 class="form-control"
                 id="start"
                 placeholder="Start Year"
               />
-              <!-- </div> -->
             </div>
             <div class="flex-item">
-              <!-- <div class="input-group"> -->
-              <!-- <div class="input-group-text">End Year</div> -->
               <input
                 type="text"
                 class="form-control"
                 id="end"
                 placeholder="End Year"
               />
-              <!-- </div> -->
             </div>
             <div class="break"></div>
             <div class="card flex-item">
@@ -124,32 +123,15 @@
               align-items: center;
               justify-content: center; height:100px">
               <div style="margin:auto">
-                <button class="btn btn-outline-dark" id="pull">Search</button>
+                <button class="btn btn-outline-dark" id="pull" style="color: white">Search</button>
               </div>
             </div>
             </div>
           </div>
-        </div>
-        <div class="row" style="height: 160px">
-          <div class="col-sm-6">
-            <div class="card">
-              <h5 class="card-header">Safety Score</h5>
-              <h1 class="score" id="crime-score-box"></h1>
-              <h6 class="scoreLabel" id="crime-score-label"></h6>
-            </div>
-          </div>
-          <div class="col-sm-6">
-            <div class="card">
-              <h5 class="card-header">City Crime Rate</h5>
-              <h1 class="score" id="crime-rate-box"></h1>
-              <h6 class="scoreLabel" id="crime-rate-label"></h6>
-            </div>
-          </div>
-        </div>
-        <div class="col-8">
+        </div>       
           <div class="card">
             <div class="card-header">
-              <nav>
+              <!-- <nav>
                 <div
                   class="nav nav-tabs card-header-tabs"
                   id="nav-tab"
@@ -216,22 +198,15 @@
                     Stacked Bar Graph
                   </button>
                 </div>
-              </nav>
+              </nav> -->
             </div>
 
-            <div class="card-body">
-              <div class="tab-content" id="nav-tabContent">
-                <div
-                  class="tab-pane fade"
-                  id="nav-map"
-                  role="tabpanel"
-                  aria-labelledby="nav-map-tab"
-                >
-                  <div
+            <div class="card-body" id="chart-container">
+              <div
                     class="autocomplete-container"
                     id="autocomplete-container"
                   ></div>
-                  <div id="mapChart" class="mapType"></div>
+                  <div id="mapChart" class="mapType">hi</div>
                   <label for="radRange" class="form-label">Radius</label><br />
                   <input
                     type="range"
@@ -247,42 +222,27 @@
                     <option value="3" label="3"></option>
                     <option value="5" label="5"></option>
                   </datalist>
-                </div>
-                <div
-                  class="tab-pane fade"
-                  id="nav-pie-chart"
-                  role="tabpanel"
-                  aria-labelledby="nav-pie-chart-tab"
-                >
                   <div id="propertyPieChart"></div>
                   <div id="personPieChart"></div>
                   <div id="societyPieChart"></div>
-                </div>
-                <div
-                  class="tab-pane fade"
-                  id="nav-line-graph"
-                  role="tabpanel"
-                  aria-labelledby="nav-line-graph-tab"
-                >
                   <div id="lineGraph"></div>
-                </div>
-                <div
-                  class="tab-pane fade"
-                  id="nav-bar-graph"
-                  role="tabpanel"
-                  aria-labelledby="nav-bar-graph-tab"
-                >
                   <div id="barGraph" class="mapType"></div>
-                </div>
-                <div
-                  class="tab-pane fade"
-                  id="nav-stacked-bar-graph"
-                  role="tabpanel"
-                  aria-labelledby="nav-stacked-bar-graph-tab"
-                >
                   <div id="stacked-bar-graph" class="mapType"></div>
-                </div>
-              </div>
+            </div>
+          </div>
+        <div class="row" style="height: 160px">
+          <div class="col-sm-6">
+            <div class="card">
+              <h5 class="card-header">Safety Score</h5>
+              <h1 class="score" id="crime-score-box"></h1>
+              <h6 class="scoreLabel" id="crime-score-label"></h6>
+            </div>
+          </div>
+          <div class="col-sm-6">
+            <div class="card">
+              <h5 class="card-header">City Crime Rate</h5>
+              <h1 class="score" id="crime-rate-box"></h1>
+              <h6 class="scoreLabel" id="crime-rate-label"></h6>
             </div>
           </div>
         </div>

@@ -3,11 +3,11 @@ const pull = document.getElementById("pull");
 let mapChart;
 let compareBtn = document.getElementById("compare");
 
-document
-  .getElementById("nav-map-tab")
-  .addEventListener("shown.bs.tab", function () {
-    mapChart.map.resize();
-  });
+// document
+//   .getElementById("nav-map-tab")
+//   .addEventListener("shown.bs.tab", function () {
+//     mapChart.map.resize();
+//   });
 
 const cityInput = document.getElementById("city");
 const startInput = document.getElementById("start");
@@ -42,6 +42,10 @@ function generateGraphs() {
 
   // Reset Map Address
   mapChart.cityName = null;
+
+  // let chartContainer = document.getElementById("chart-container");
+  // chartContainer.classList.remove("hidden");
+  mapChart.map.resize();
 }
 
 pull.addEventListener("click", generateGraphs);
@@ -229,6 +233,8 @@ function getBarModeLayout(barmode, title, xAxisTitle, yAxisTitle) {
     title: title,
     xaxis: { title: xAxisTitle },
     yaxis: { title: yAxisTitle },
+    // paper_bgcolor: "black",
+    // plot_bgcolor: "black",
   };
   return layout;
 }
