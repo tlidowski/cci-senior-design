@@ -358,7 +358,7 @@ def get_locations_given_address():
         return json.dumps(
             {"errors": ["Invalid Years"]}
         )
-    if dropdownCity == "Select":
+    if dropdownCity == "Select City":
         return json.dumps(
             {"errors": ["Please select a city from the dropdown first"]}
         ) 

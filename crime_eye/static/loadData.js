@@ -3,11 +3,11 @@ const pull = document.getElementById("pull");
 let mapChart;
 let compareBtn = document.getElementById("compare");
 
-document
-  .getElementById("nav-map-tab")
-  .addEventListener("shown.bs.tab", function () {
-    mapChart.map.resize();
-  });
+// document
+//   .getElementById("nav-map-tab")
+//   .addEventListener("shown.bs.tab", function () {
+//     mapChart.map.resize();
+//   });
 
 const cityInput = document.getElementById("city");
 const startInput = document.getElementById("start");
@@ -25,15 +25,15 @@ function generateGraphs() {
 
   // TODO Do input validation here
 
-  if (!start || !end ||!city){
+  if (!start || !end || !city) {
     insert_error("Need all parameters please");
     return;
   }
 
   // TEMPORARY LOGIC
-  // if (otherCities == "Select") {
-  //   otherCities = null;
-  // }
+  if (otherCities === "Nothing selected") {
+    otherCities = null;
+  }
   generateMap(city, start, end, otherCities);
   generatePieChart(city, start, end, otherCities);
   generateLineGraph(city, start, end, otherCities);
@@ -42,6 +42,10 @@ function generateGraphs() {
 
   // Reset Map Address
   mapChart.cityName = null;
+
+  // let chartContainer = document.getElementById("chart-container");
+  // chartContainer.classList.remove("hidden");
+  mapChart.map.resize();
 }
 
 pull.addEventListener("click", generateGraphs);
@@ -70,9 +74,9 @@ function generateMap(city, start, end, otherCities) {
         console.log(`Error: ${res.errors[0]}`);
       } else {
         mapChart.sendData(res.features, res.center);
-        let crimeScoreBox = document.getElementById("crime-score-box");
+        let crimeScoreBox = document.getElementById("safety-score-box");
         crimeScoreBox.innerHTML = res.crimeScore;
-        let crimeScoreBoxLabel = document.getElementById("crime-score-label");
+        let crimeScoreBoxLabel = document.getElementById("safety-score-label");
         crimeScoreBoxLabel.innerHTML = res.crimeScoreLabel;
 
         let crimeRateBox = document.getElementById("crime-rate-box");
@@ -95,33 +99,39 @@ function generatePieChart(city, start, end, otherCities) {
         return response.json();
       })
       .then((data) => {
-        $(document).ready(function (){
-            // console.log(data.counts);
-            var propertyPieChart_data = [{
-                type: "pie",
-                title: "Property Crimes",
-                values: data.property_counts,
-                labels: data.property_crimes
-            }];
-            var personPieChart_data = [{
-                type: "pie",
-                title: "Person Crimes",
-                values: data.person_counts,
-                labels: data.person_crimes
-            }];
-            var societyPieChart_data = [{
+        $(document).ready(function () {
+          // console.log(data.counts);
+          var propertyPieChart_data = [
+            {
+              type: "pie",
+              title: "Property Crimes",
+              values: data.property_counts,
+              labels: data.property_crimes,
+            },
+          ];
+          var personPieChart_data = [
+            {
+              type: "pie",
+              title: "Person Crimes",
+              values: data.person_counts,
+              labels: data.person_crimes,
+            },
+          ];
+          var societyPieChart_data = [
+            {
               type: "pie",
               title: "Society Crimes",
               values: data.society_counts,
-              labels: data.society_crimes
-          }];
-            var layout = {
-                height: 600,
-                width: 600
-              };
-            Plotly.newPlot('propertyPieChart',propertyPieChart_data, layout);
-            Plotly.newPlot('personPieChart', personPieChart_data, layout);
-            Plotly.newPlot('societyPieChart', societyPieChart_data, layout);
+              labels: data.society_crimes,
+            },
+          ];
+          var layout = {
+            height: 600,
+            width: 600,
+          };
+          Plotly.newPlot("propertyPieChart", propertyPieChart_data, layout);
+          Plotly.newPlot("personPieChart", personPieChart_data, layout);
+          Plotly.newPlot("societyPieChart", societyPieChart_data, layout);
         });
       });
   }
@@ -223,12 +233,14 @@ function getBarModeLayout(barmode, title, xAxisTitle, yAxisTitle) {
     title: title,
     xaxis: { title: xAxisTitle },
     yaxis: { title: yAxisTitle },
+    // paper_bgcolor: "black",
+    // plot_bgcolor: "black",
   };
   return layout;
 }
 
 function generateBarGraph(city, start, end, otherCities) {
-  console.log(`other city ${otherCities}`);
+  console.log(`bar other ${otherCities}`);
   if (otherCities != null) {
     let city2 = otherCities; // REPLACE with correct multi-city logic
     fetch(
@@ -294,7 +306,6 @@ function buildOtherCitiesList(otherCities) {
 
 function generateStackedBarGraph(city, start, end, otherCities) {
   let otherCitiesList = buildOtherCitiesList(otherCities);
-  console.log("stack othercit", otherCitiesList);
   fetch(
     `http://127.0.0.1:5000/crimes_stacked_bar_graph?city=${city}&start=${start}&end=${end}&otherCities=${JSON.stringify(
       { other_cities: otherCitiesList }
@@ -382,9 +393,9 @@ function getMonthName(monthNum) {
 //                 console.log(`Error: ${res.errors[0]}`)
 //             }else{
 //                 mapChart.sendData(res.features, res.center);
-//                 let crimeScoreBox = document.getElementById("crime-score-box");
+//                 let crimeScoreBox = document.getElementById("safety-score-box");
 //                 crimeScoreBox.innerHTML = res.crimeScore;
-//                 let crimeScoreBoxLabel = document.getElementById("crime-score-label");
+//                 let crimeScoreBoxLabel = document.getElementById("safety-score-label");
 //                 crimeScoreBoxLabel.innerHTML = res.crimeScoreLabel;
 
 //                 let crimeRateBox = document.getElementById("crime-rate-box");

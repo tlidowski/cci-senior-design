@@ -1,46 +1,73 @@
+.container {
+}
+
+.hidden {
+  display: none;
+}
+
 .text-center {
-    text-align: center;
+  text-align: center;
 }
 
 .uppercase {
-    text-transform: uppercase;
+  text-transform: uppercase;
 }
 
 .center-block {
-    display: block;
-    margin-left: auto;
-    margin-right: auto;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .info-card {
-    border: 1px solid black;
-    margin-bottom: 15px;
+  border: 1px solid black;
+  margin-bottom: 15px;
 }
 
 .info-card header {
-    background: lightblue;
-    margin-bottom: 15px;
-    height: 93px;
-    padding: 5px;
-    display: flex;
-    align-items: center;
+  background: lightblue;
+  margin-bottom: 15px;
+  height: 93px;
+  padding: 5px;
+  display: flex;
+  align-items: center;
 }
 
 .score {
-    font-size: 30px;
-    text-align: center;
-    padding-top: 10px;
+  font-size: 30px;
+  text-align: center;
+  padding-top: 10px;
 }
 
 .card {
-    margin-top: 15px;
+  margin-top: 15px;
 }
 
 .card-header {
-    text-align: center;
+  text-align: center;
 }
 
 .scoreLabel {
-    font-size: 15px;
-    text-align: center;
-    padding-bottom: 15px;
+  font-size: 15px;
+  text-align: center;
+  padding-bottom: 15px;
+}
+
+.flex-container {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.flex-item {
+  flex-grow: 1;
+}
+
+.break {
+  flex-basis: 100%;
+  height: 0;
+}
+
+.card {
+  background-color: rgb(7, 7, 46);
+  color: white;
+}
