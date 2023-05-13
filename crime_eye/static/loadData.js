@@ -19,14 +19,21 @@ const cityCompareInput = document.getElementsByClassName(
 
 function generateGraphs() {
   let city = cityInput.value;
-  let start = startInput.value;
-  let end = endInput.value;
+  let start = parseInt(startInput.value);
+  let end = parseInt(endInput.value);
   let otherCities = cityCompareInput[0].innerHTML;
 
   // TODO Do input validation here
-
-  if (!start || !end || !city) {
-    insert_error("Need all parameters please");
+  if (isNaN(start) || city==='Select City') {
+    insert_error("City Selection or Start Year Missing");
+    return;
+  }
+  if (start<2020 || start>2021) {
+    insert_error("Start Year Must Be Between 2020-2021");
+    return;
+  }
+  if (!isNaN(end) && (end<2020 || end>2021 || start>end)) {
+    insert_error("End Year Must Be Between 2020-2021");
     return;
   }
 
@@ -543,3 +550,4 @@ window.addEventListener("load", () => {
     mapChart.setRadius(slider.value);
   };
 });
+
