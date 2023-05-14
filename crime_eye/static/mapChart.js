@@ -154,7 +154,11 @@ class MapChart{
         // Results of data should be sent from server
 
     }
-
+    resetCity(){
+        this.cityName = null;
+        this.centerLat = null;
+        this.centerLon = null;
+    }
     setAddressData(data){
         this.cityName = data.city
         this.centerLat = data.lat
