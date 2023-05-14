@@ -1,3 +1,6 @@
 .venv
 .idea
 .DS_Store
+crime_eye/__pycache__/aws_connection.cpython-311.pyc
+crime_eye/__pycache__/map_processing.cpython-311.pyc
+crime_eye/__pycache__/validation.cpython-311.pyc

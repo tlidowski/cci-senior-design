@@ -15,6 +15,8 @@ function addressAutocomplete(containerElement, callback, options) {
     // create input element
     const inputElement = document.createElement("input");
     inputElement.setAttribute("type", "text");
+    inputElement.setAttribute("id", "addressInputBox");
+
     inputElement.setAttribute("placeholder", options.placeholder);
     inputContainerElement.appendChild(inputElement);
   
@@ -221,5 +223,5 @@ function addressAutocomplete(containerElement, callback, options) {
       mapChart.setAddressData(data);
     }
   }, {
-    placeholder: "Enter an address here"
+    placeholder: "Specify Address"
   });

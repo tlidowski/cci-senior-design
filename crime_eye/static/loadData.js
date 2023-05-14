@@ -1,5 +1,5 @@
 let table_parent = document.getElementById("table_parent");
-const pull = document.getElementById("pull");
+
 let mapChart;
 let compareBtn = document.getElementById("compare");
 let crimeRateSingle= document.getElementById('crimeRateSingle');
@@ -10,7 +10,9 @@ let crimeRateMultiple= document.getElementById('crimeRateMultiple');
 //     mapChart.map.resize();
 //   });
 let crimeRateSide = "single";
-
+const DEFAULT_COMPARE_DROPDOWN_MESSAGE = "Nothing selected";
+const pull = document.getElementById("pull");
+const addressButton = document.getElementById("addressSearchButton");
 const cityInput = document.getElementById("city");
 const startInput = document.getElementById("start");
 const endInput = document.getElementById("end");
@@ -19,38 +21,54 @@ const cityCompareInput = document.getElementsByClassName(
     "filter-option-inner-inner"
 );
 
+// Reset map's data when city is selected
+// (Prevents specific address lookup button from triggering after city change) 
+document.getElementById("city").addEventListener('change', function(){
+    mapChart.resetCity();
+})
+
+function isValidInputs(city, start, end){
+    if (isNaN(start) || city === 'Select City') {
+        insert_error("City Selection or Start Year Missing");
+        return false;
+    }
+    if (start < 2020 || start > 2021) {
+        insert_error("Start Year Must Be Between 2020-2021");
+        return false;   
+    }
+    if (!isNaN(end) && (end < 2020 || end > 2021 || start > end)) {
+        insert_error("End Year Must Be Between 2020-2021");
+        return false;
+    }
+    return true
+}
+
+function getOtherCities(){
+    let cities = cityCompareInput[0].innerHTML;
+    if(cities === DEFAULT_COMPARE_DROPDOWN_MESSAGE){
+        return null
+    }
+    return cities
+}
 function generateGraphs() {
     let city = cityInput.value;
     let start = parseInt(startInput.value);
     let end = parseInt(endInput.value);
-    let otherCities = cityCompareInput[0].innerHTML;
 
-    // TODO Do input validation here
-    if (isNaN(start) || city === 'Select City') {
-        insert_error("City Selection or Start Year Missing");
-        return;
-    }
-    if (start < 2020 || start > 2021) {
-        insert_error("Start Year Must Be Between 2020-2021");
-        return;
-    }
-    if (!isNaN(end) && (end < 2020 || end > 2021 || start > end)) {
-        insert_error("End Year Must Be Between 2020-2021");
-        return;
+    // Returns null instead of the dropdown's default message (for comparison purposes w/ null)
+    let otherCities = getOtherCities();
+    
+    // Validation
+    if(!isValidInputs(city, start, end)){
+        return
     }
 
-    // TEMPORARY LOGIC
-    if (otherCities === "Nothing selected") {
-        otherCities = null;
-    }
     generateMap(city, start, end, otherCities);
     generatePieChart(city, start, end, otherCities);
     generateLineGraph(city, start, end, otherCities);
     generateBarGraph(city, start, end, otherCities);
     generateStackedBarGraph(city, start, end, otherCities);
     generateCrimeTables(city, start, end, otherCities)
-    // Reset Map Address
-    mapChart.cityName = null;
 
     // let chartContainer = document.getElementById("chart-container");
     // chartContainer.classList.remove("hidden");
@@ -58,29 +76,95 @@ function generateGraphs() {
 }
 
 pull.addEventListener("click", generateGraphs);
+addressButton.addEventListener("click", searchSpecificLocation)
+
 
 function generateMap(city, start, end, otherCities) {
-    let cityName = mapChart.cityName;
     // Don't get map data if there isn't an address, or if we are Comparing cities
-    if (cityName == null || otherCities != null) {
+    if (otherCities != null) {
         return;
     }
-    let lat = mapChart.centerLat;
-    let lon = mapChart.centerLon;
 
     let dropdownCity = city;
     let radius = mapChart.getRadius();
 
-    // Assuming validation on server
+    // Get dropdown City's geolocation data
+    const apiKey = "319cf01c353142f082ee1055a6689222";
+    var url = `https://api.geoapify.com/v1/geocode/autocomplete?text=${encodeURIComponent(city)}&format=json&limit=5&apiKey=${apiKey}`;
+    fetch(url)
+    .then((response) => {
+        return response.json();
+    })
+    .then((data) => {
+        let output = data.results[0]
+        mapChart.setAddressData(output);
+    }).then(_ => {
+        // Now do the actual map updating
+        let lat = mapChart.centerLat;
+        let lon = mapChart.centerLon;
+        fetch(
+            `http://127.0.0.1:5000/crimes_from_address?dropdownCity=${dropdownCity}&cityName=${city}&start=${start}&end=${end}&radius=${radius}&lat=${lat}&lon=${lon}`
+        )
+            .then((response) => {
+                return response.json();
+            })
+            .then((res) => {
+                if (res.errors.length) {
+                    insert_error(`Error: ${res.errors[0]}`);
+                } else {
+                    mapChart.sendData(res.features, res.center);
+                    let crimeScoreBox = document.getElementById("safety-score-box");
+                    crimeScoreBox.innerHTML = res.crimeScore;
+                    let crimeScoreBoxLabel = document.getElementById("safety-score-label");
+                    crimeScoreBoxLabel.innerHTML = res.crimeScoreLabel;
+    
+                    let crimeRateBox = document.getElementById("crime-rate-box");
+                    crimeRateBox.innerHTML = res.crimeRate;
+                    let crimeRateBoxLabel = document.getElementById("crime-rate-label");
+                    crimeRateBoxLabel.innerHTML = res.crimeRateLabel;
+                    // Resets map data
+                    mapChart.resetCity()
+                }
+
+            });
+    })
+    
+
+
+
+}
+
+
+function searchSpecificLocation(){
+    inputBox = document.getElementById("addressInputBox")
+    let dropdownCity = cityInput.value;
+    let start = parseInt(startInput.value);
+    let end = parseInt(endInput.value);
+    let radius = mapChart.getRadius();
+
+    // Returns null instead of the dropdown's default message (for comparison purposes w/ null)
+    let otherCities = getOtherCities();
+    
+    // Validation
+    if(!isValidInputs(dropdownCity, start, end)){
+        return
+    }
+    let city = mapChart.cityName;
+    if(city == null || !inputBox.value || (inputBox.value == inputBox.placeholder)){
+        insert_error(`Please type a valid address for ${dropdownCity} before searching`)
+        return
+    }
+    let lat = mapChart.centerLat;
+    let lon = mapChart.centerLon;
     fetch(
-        `http://127.0.0.1:5000/crimes_from_address?dropdownCity=${dropdownCity}&cityName=${cityName}&start=${start}&end=${end}&radius=${radius}&lat=${lat}&lon=${lon}`
+        `http://127.0.0.1:5000/crimes_from_address?dropdownCity=${dropdownCity}&cityName=${city}&start=${start}&end=${end}&radius=${radius}&lat=${lat}&lon=${lon}`
     )
         .then((response) => {
-            return response.json(); // TODO should be replaced by validation before function call
+            return response.json();
         })
         .then((res) => {
             if (res.errors.length) {
-                console.log(`Error: ${res.errors[0]}`);
+                insert_error(`Error: ${res.errors[0]}`);
             } else {
                 mapChart.sendData(res.features, res.center);
                 let crimeScoreBox = document.getElementById("safety-score-box");
@@ -88,14 +172,12 @@ function generateMap(city, start, end, otherCities) {
                 let crimeScoreBoxLabel = document.getElementById("safety-score-label");
                 crimeScoreBoxLabel.innerHTML = res.crimeScoreLabel;
 
-                let crimeRateBox = document.getElementById("crime-rate-box");
-                crimeRateBox.innerHTML = res.crimeRate;
-                let crimeRateBoxLabel = document.getElementById("crime-rate-label");
-                crimeRateBoxLabel.innerHTML = res.crimeRateLabel;
+                // Resets map data
+                mapChart.resetCity()
             }
         });
-}
 
+}
 function generatePieChart(city, start, end, otherCities) {
     if (otherCities != null) {
         console.log("TEMPORARY: No Pie Chart gen. due to comparison");
@@ -232,7 +314,7 @@ function getBarModeLayout(barmode, title, xAxisTitle, yAxisTitle) {
 }
 
 function generateBarGraph(city, start, end, otherCities) {
-    console.log(`bar other ${otherCities}`);
+    // console.log(`bar other ${otherCities}`);
     if (otherCities != null) {
         let city2 = otherCities; // REPLACE with correct multi-city logic
         fetch(
