@@ -564,6 +564,11 @@ function generateCrimeTables(city, start, end, cities) {
 window.addEventListener("load", () => {
     // Initialize map
     $('#crimeRateSingle').collapse('toggle');
+    var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+  return new bootstrap.Tooltip(tooltipTriggerEl)
+})
+
     mapChart = new MapChart("mapChart");
     let slider = document.getElementById("radRange");
     slider.onclick = function () {

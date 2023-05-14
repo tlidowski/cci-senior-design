@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
     <title>CRIME EYE</title>
+    <script src="https://kit.fontawesome.com/634a5ae9d9.js" crossorigin="anonymous"></script>
     <link
             href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css"
             rel="stylesheet"
@@ -125,7 +126,10 @@
                             <div id="mapChart" class="mapType">
                                 <div class="card crime-background"
                                      style="position: absolute; z-index: 1; left: 0; top: -17px;">
-                                    <h5 class="card-header">Safety Score</h5>
+                                    <h5 class="card-header">Safety Score
+                                    <button type="button" class="crime-background" data-bs-toggle="tooltip" data-bs-placement="top" title="Safety Score Based on Population, Size, and Location of City" style="border: None;"><i class="fa-solid fa-circle-info" >
+                                </i></button>
+                                    </h5>
                                     <h1 class="score" id="safety-score-box"></h1>
                                     <h6 class="scoreLabel" id="safety-score-label"></h6>
                                 </div>
@@ -157,14 +161,20 @@
                 <div class="col col-4" id="crimeRateCollapse">
                     <div class="row" style="margin-top: 70px">
                         <div class="card text-white bg-dark mb-3 collapse" style="max-width: 26rem;" id="crimeRateSingle">
-                            <div class="card-header">City Crime Rate</div>
+                            <div class="card-header">City Crime Rate
+                                <button type="button" class="btn btn-dark" data-bs-toggle="tooltip" data-bs-placement="top" title="Crime Rate Per 1000 People from Total Crime of City"><i class="fa-solid fa-circle-info" >
+                                </i></button>
+                            </div>
                             <div class="card-body">
                                 <h1 class="score" id="crime-rate-box"></h1>
                                 <h6 class="scoreLabel" id="crime-rate-label"></h6>
                             </div>
                         </div>
                         <div class="card text-white bg-dark mb-3 collapse" style="max-width: 26rem;" id="crimeRateMultiple">
-                            <h5 class="card-header">Crime Rates Per 1000 People</h5>
+                            <div class="card-header">City Crime Rates
+                                <button type="button" class="btn btn-dark" data-bs-toggle="tooltip" data-bs-placement="top" title="Crime Rate Per 1000 People from Total Crime of Cities"><i class="fa-solid fa-circle-info" >
+                                </i></button>
+                            </div>
                             <div class="card-body">
                                 <div class='table-light' id="dataTableContainer">
                                     <table id="table"></table>
@@ -176,7 +186,6 @@
             </div>
         </div>
     </div>
-</div>
 </div>
 <script src="{{ url_for('static', filename='loadData.js') }}"></script>
 <script src="{{ url_for('static', filename='mapChart.js') }}"></script>
