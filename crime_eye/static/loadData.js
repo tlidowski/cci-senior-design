@@ -377,23 +377,45 @@ function getMonthName(monthNum) {
 }
 
 function generateCrimeTables(city, start, end, cities) {
-    if(cities){
-        cities=JSON.stringify(cities);
+    if (cities) {
+        cities = JSON.stringify(cities);
     }
     fetch(`http://127.0.0.1:5000/crimes_rate_given_city?dropdownCity=${city}&cityName=${city}&start=${start}&end=${end}&cities=${cities}`)
         .then((response) => {
             return response.json();
         })
         .then((res) => {
-            if ("crimeRate" in res){
+            if ("crimeRate" in res) {
                 let crimeRateBox = document.getElementById("crime-rate-box");
                 crimeRateBox.innerHTML = res['crimeRate'];
                 let crimeRateBoxLabel = document.getElementById("crime-rate-label");
                 crimeRateBoxLabel.innerHTML = "per 1000 people";
-            }
-            else if ('crimeRateMap' in res){
+            } else if ('crimeRateMap' in res) {
                 let crimeRateMap = res['crimeRateMap']
-                console.log(crimeRateMap)
+                let dataContainer = document.getElementById('dataTableContainer');
+                dataContainer.innerHTML='';
+                let newTable = document.createElement('table');
+                newTable.setAttribute('id', 'table');
+                dataContainer.appendChild(newTable);
+                $("#table").bootstrapTable({
+                    data: crimeRateMap,
+                    // pageSize: 5,
+                    // pageNumber: 1,
+                    // pagination: true,
+                    columns: [
+                        {
+                            field: 'cityName',
+                            title: 'City Name',
+                            sortable: true
+                        },
+                        {
+                            field: 'crimeRate',
+                            title: 'Crime Rate',
+                            sortable: true
+                        }
+                    ]
+                });
+                newTable.classList.add('table-dark');
             }
         })
 }

@@ -466,9 +466,9 @@ def crimes_rate_given_city():
             return json.dumps({
                 "crimeRate": crime_rate,
             })
-        crime_rate_map = {}
+        crime_rate_map = []
         for current_city_name in cities:
-            crime_rate_map[current_city_name] = get_crime_rate(current_city_name)
+            crime_rate_map.append({'cityName': current_city_name, 'crimeRate': get_crime_rate(current_city_name)})
         return json.dumps({
             "crimeRateMap": crime_rate_map,
         })
