@@ -2,12 +2,14 @@ let table_parent = document.getElementById("table_parent");
 const pull = document.getElementById("pull");
 let mapChart;
 let compareBtn = document.getElementById("compare");
-
+let crimeRateSingle= document.getElementById('crimeRateSingle');
+let crimeRateMultiple= document.getElementById('crimeRateMultiple');
 // document
 //   .getElementById("nav-map-tab")
 //   .addEventListener("shown.bs.tab", function () {
 //     mapChart.map.resize();
 //   });
+let crimeRateSide = "single";
 
 const cityInput = document.getElementById("city");
 const startInput = document.getElementById("start");
@@ -390,6 +392,11 @@ function generateCrimeTables(city, start, end, cities) {
                 crimeRateBox.innerHTML = res['crimeRate'];
                 let crimeRateBoxLabel = document.getElementById("crime-rate-label");
                 crimeRateBoxLabel.innerHTML = "per 1000 people";
+                if(crimeRateSide==='multiple'){
+                    $('#crimeRateMultiple').collapse('toggle');
+                    $('#crimeRateSingle').collapse('toggle');
+                    crimeRateSide='single';
+                }
             } else if ('crimeRateMap' in res) {
                 let crimeRateMap = res['crimeRateMap']
                 let dataContainer = document.getElementById('dataTableContainer');
@@ -416,6 +423,11 @@ function generateCrimeTables(city, start, end, cities) {
                     ]
                 });
                 newTable.classList.add('table-dark');
+                if(crimeRateSide==='single'){
+                    $('#crimeRateSingle').collapse('toggle');
+                    $('#crimeRateMultiple').collapse('toggle');
+                    crimeRateSide='multiple';
+                }
             }
         })
 }
@@ -551,6 +563,7 @@ function generateCrimeTables(city, start, end, cities) {
 
 window.addEventListener("load", () => {
     // Initialize map
+    $('#crimeRateSingle').collapse('toggle');
     mapChart = new MapChart("mapChart");
     let slider = document.getElementById("radRange");
     slider.onclick = function () {

@@ -116,55 +116,62 @@
             </div>
         </div>
         <div class="card">
-            <div class="card-body" id="chart-container">
-                <div class="autocomplete-container" id="autocomplete-container">
-                </div>
-                <div id="mapChart" class="mapType">
-                    <div class="card" style="position: absolute; z-index: 1; left: 0; top: -17px;">
-                        <h5 class="card-header">Safety Score</h5>
-                        <h1 class="score" id="safety-score-box"></h1>
-                        <h6 class="scoreLabel" id="safety-score-label"></h6>
+            <div class="row">
+                <div class="col col-8">
+                    <div class="row">
+                        <div class="card-body" id="chart-container">
+                            <div class="autocomplete-container" id="autocomplete-container">
+                            </div>
+                            <div id="mapChart" class="mapType">
+                                <div class="card" style="position: absolute; z-index: 1; left: 0; top: -17px;">
+                                    <h5 class="card-header">Safety Score</h5>
+                                    <h1 class="score" id="safety-score-box"></h1>
+                                    <h6 class="scoreLabel" id="safety-score-label"></h6>
+                                </div>
+                            </div>
+                            <label for="radRange" class="form-label">Radius</label><br/>
+                            <input
+                                    type="range"
+                                    name="radRange"
+                                    class="form-range"
+                                    id="radRange"
+                                    min="1"
+                                    max="5"
+                                    step="1"
+                            />
+                            <datalist id="radRange">
+                                <option value="1" label="1"></option>
+                                <option value="3" label="3"></option>
+                                <option value="5" label="5"></option>
+                            </datalist>
+                            <div id="propertyPieChart"></div>
+                            <div id="personPieChart"></div>
+                            <div id="societyPieChart"></div>
+                            <div id="lineGraph"></div>
+                            <div id="barGraph" class="mapType"></div>
+                            <div id="stacked-bar-graph" class="mapType"></div>
+                        </div>
                     </div>
                 </div>
-                <label for="radRange" class="form-label">Radius</label><br/>
-                <input
-                        type="range"
-                        name="radRange"
-                        class="form-range"
-                        id="radRange"
-                        min="1"
-                        max="5"
-                        step="1"
-                />
-                <datalist id="radRange">
-                    <option value="1" label="1"></option>
-                    <option value="3" label="3"></option>
-                    <option value="5" label="5"></option>
-                </datalist>
-                <div id="propertyPieChart"></div>
-                <div id="personPieChart"></div>
-                <div id="societyPieChart"></div>
-                <div id="lineGraph"></div>
-                <div id="barGraph" class="mapType"></div>
-                <div id="stacked-bar-graph" class="mapType"></div>
-            </div>
-        </div>
-        <div class="row" style="height: 160px">
-            <div class="col-sm-6">
-                <div class="card">
-                    <h5 class="card-header">City Crime Rate</h5>
-                    <h1 class="score" id="crime-rate-box"></h1>
-                    <h6 class="scoreLabel" id="crime-rate-label"></h6>
-                </div>
-                <div class="card">
-                    <h5 class="card-header">Crime Rates Per 1000 People</h5>
-                    <div class='table-light' id="dataTableContainer">
-                        <table id="table"></table>
+                <div class="col col-4" id="crimeRateCollapse">
+                    <div class="row">
+                            <div class="card collapse" id="crimeRateSingle">
+                                <h5 class="card-header">City Crime Rate</h5>
+                                <h1 class="score" id="crime-rate-box"></h1>
+                                <h6 class="scoreLabel" id="crime-rate-label"></h6>
+                            </div>
+                            <div class="card collapse" id="crimeRateMultiple">
+                                <h5 class="card-header">Crime Rates Per 1000 People</h5>
+                                <div class='table-light' id="dataTableContainer">
+                                    <table id="table"></table>
+                                </div>
+                            </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+</div>
 </div>
 <script src="{{ url_for('static', filename='loadData.js') }}"></script>
 <script src="{{ url_for('static', filename='mapChart.js') }}"></script>
