@@ -123,7 +123,8 @@
                             <div class="autocomplete-container" id="autocomplete-container">
                             </div>
                             <div id="mapChart" class="mapType">
-                                <div class="card crime-background" style="position: absolute; z-index: 1; left: 0; top: -17px;">
+                                <div class="card crime-background"
+                                     style="position: absolute; z-index: 1; left: 0; top: -17px;">
                                     <h5 class="card-header">Safety Score</h5>
                                     <h1 class="score" id="safety-score-box"></h1>
                                     <h6 class="scoreLabel" id="safety-score-label"></h6>
@@ -154,18 +155,22 @@
                     </div>
                 </div>
                 <div class="col col-4" id="crimeRateCollapse">
-                    <div class="row">
-                            <div class="card text-white bg-dark  collapse" id="crimeRateSingle">
-                                <h5 class="card-header">City Crime Rate</h5>
+                    <div class="row" style="margin-top: 70px">
+                        <div class="card text-white bg-dark mb-3 collapse" style="max-width: 26rem;" id="crimeRateSingle">
+                            <div class="card-header">City Crime Rate</div>
+                            <div class="card-body">
                                 <h1 class="score" id="crime-rate-box"></h1>
                                 <h6 class="scoreLabel" id="crime-rate-label"></h6>
                             </div>
-                            <div class="card text-white bg-dark  collapse" id="crimeRateMultiple">
-                                <h5 class="card-header">Crime Rates Per 1000 People</h5>
+                        </div>
+                        <div class="card text-white bg-dark mb-3 collapse" style="max-width: 26rem;" id="crimeRateMultiple">
+                            <h5 class="card-header">Crime Rates Per 1000 People</h5>
+                            <div class="card-body">
                                 <div class='table-light' id="dataTableContainer">
                                     <table id="table"></table>
                                 </div>
                             </div>
+                        </div>
                     </div>
                 </div>
             </div>
