@@ -119,7 +119,13 @@
             <div class="card-body" id="chart-container">
                 <div class="autocomplete-container" id="autocomplete-container">
                 </div>
-                <div id="mapChart" class="mapType"></div>
+                <div id="mapChart" class="mapType">
+                    <div class="card" style="position: absolute; z-index: 1; left: 0; top: -17px;">
+                        <h5 class="card-header">Safety Score</h5>
+                        <h1 class="score" id="safety-score-box"></h1>
+                        <h6 class="scoreLabel" id="safety-score-label"></h6>
+                    </div>
+                </div>
                 <label for="radRange" class="form-label">Radius</label><br/>
                 <input
                         type="range"
@@ -146,22 +152,15 @@
         <div class="row" style="height: 160px">
             <div class="col-sm-6">
                 <div class="card">
-                    <h5 class="card-header">Safety Score</h5>
-                    <h1 class="score" id="safety-score-box"></h1>
-                    <h6 class="scoreLabel" id="safety-score-label"></h6>
-                </div>
-            </div>
-            <div class="col-sm-6">
-                <div class="card">
                     <h5 class="card-header">City Crime Rate</h5>
                     <h1 class="score" id="crime-rate-box"></h1>
                     <h6 class="scoreLabel" id="crime-rate-label"></h6>
                 </div>
                 <div class="card">
                     <h5 class="card-header">Crime Rates Per 1000 People</h5>
-                        <div class = 'table-light' id="dataTableContainer">
-                            <table id="table"></table>
-                        </div>
+                    <div class='table-light' id="dataTableContainer">
+                        <table id="table"></table>
+                    </div>
                 </div>
             </div>
         </div>
