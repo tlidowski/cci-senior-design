@@ -88,59 +88,13 @@ def get_location_from_name(city):
 def get_pie_chart():
     # pie chart using crime codes 
     # TODO: group crime codes into categories provided by prof
-    crime_descriptions = {
-        'Arson': ['200'],
-        'Assault': ['13', '13A', '13B', '13C'],
-        'Bribery': ['510'],
-        'Burglary': ['220'],
-        'Counterfeiting/Forgery': ['250'],
-        'Vandalism of Property': ['290'],
-        'Drug/Narcotic Offenses': ['35', '35A', '35B'],
-        'Embezzlement': ['270'],
-        'Extortion/Blackmail': ['210'],
-        'Fraud Offenses': ['26', '26A', '26B', '26C', '26D', '26E'],
-        'Gambling Offenses': ['39', '39A', '39B', '39C', '39D'],
-        'Homicide': ['09', '09A', '09B', '09C'],
-        'Kidnapping/Abduction': ['100'],
-        'Larceny-Theft': ['23', '23A', '23B', '23C', '23D', '23E', '23F', '23G', '23H'],
-        'Vehicle-Theft': ['240'],
-        'Pornography': ['370'],
-        'Prostitution': ['40', '40A', '40B'],
-        'Armed Robbery': ['120'],
-        'Sex Offenses, Forcible': ['11', '11A', '11B', '11C', '11D'],
-        'Sex Offenses, Nonforcible': ['36A', '36B'],
-        'Stolen Property Offenses': ['280'],
-        'Weapon Law Violations': ['520'],
+    crime_type = {
+        'Property' : ['200', '220', '250', '290', '270', '210', '26', '26A', '26B', '26C', '26D', '26E', '23', '23A', '23B', '23C', '23D', '23E', '23F', '23G', '23H', '240', '280'],
+        'Person' : ['09', '09A', '09B', '09C', '100', '11', '11A', '11B', '11C', '11D', '36A', '36B', '120', '13', '13A', '13B', '13C'],
+        'Society' : ['35', '35A', '35B', '39', '39A', '39B', '39C', '39D', '370', '40', '40A', '40B', '520'],
         'Other': ['90', '90A', '90B', '90C', '90D', '90E', '90F', '90G', '90H', '90I', '90J', '90Z']
     }
 
-    property_crimes = {
-        'Arson': ['200'],
-        'Burglary': ['220'],
-        'Counterfeiting/Forgery': ['250'],
-        'Vandalism of Property': ['290'],
-        'Embezzlement': ['270'],
-        'Extortion/Blackmail': ['210'],
-        'Fraud Offenses': ['26', '26A', '26B', '26C', '26D', '26E'],
-        'Larceny-Theft': ['23', '23A', '23B', '23C', '23D', '23E', '23F', '23G', '23H'],
-        'Vehicle-Theft': ['240'],
-        'Stolen Property Offenses': ['280'],
-    }
-    person_crimes = {
-        'Homicide': ['09', '09A', '09B', '09C'],
-        'Kidnapping/Abduction': ['100'],
-        'Sex Offenses, Forcible': ['11', '11A', '11B', '11C', '11D'],
-        'Sex Offenses, Nonforcible': ['36A', '36B'],
-        'Armed Robbery': ['120'],
-        'Assault': ['13', '13A', '13B', '13C']
-    }
-    society_crimes = {
-        'Drug/Narcotic Offenses': ['35', '35A', '35B'],
-        'Gambling Offenses': ['39', '39A', '39B', '39C', '39D'],
-        'Pornography': ['370'],
-        'Prostitution': ['40', '40A', '40B'],
-        'Weapon Law Violations': ['520'],
-    }
     city = request.args.get('city')
     start = request.args.get('start')
     end = request.args.get('end')
@@ -149,17 +103,12 @@ def get_pie_chart():
         res = aws.get_crime_descriptions_and_counts(city, engine, start, end)
 
         engine.close()
-        propertyCounts = getCounts(property_crimes, res)
-        personCounts = getCounts(person_crimes, res)
-        societyCounts = getCounts(society_crimes, res)
+        crimeCounts = getCounts(crime_type, res)
+        print(crimeCounts)
 
         return json.dumps({
-            "property_counts": list(propertyCounts.values()),
-            "property_crimes": list(propertyCounts.keys()),
-            "person_counts": list(personCounts.values()),
-            "person_crimes": list(personCounts.keys()),
-            "society_counts": list(societyCounts.values()),
-            "society_crimes": list(societyCounts.keys())
+            "property_counts": list(crimeCounts.values()),
+            "property_crimes": list(crimeCounts.keys()),
         })
     except Exception as e:
         print(f'Faliure: {e}')

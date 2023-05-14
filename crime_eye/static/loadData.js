@@ -110,37 +110,19 @@ function generatePieChart(city, start, end, otherCities) {
             .then((data) => {
                 $(document).ready(function () {
                     // console.log(data.counts);
-                    var propertyPieChart_data = [
+                    var pieChart_data = [
                         {
                             type: "pie",
-                            title: "Property Crimes",
+                            title: "Crime Pie Chart",
                             values: data.property_counts,
                             labels: data.property_crimes,
-                        },
-                    ];
-                    var personPieChart_data = [
-                        {
-                            type: "pie",
-                            title: "Person Crimes",
-                            values: data.person_counts,
-                            labels: data.person_crimes,
-                        },
-                    ];
-                    var societyPieChart_data = [
-                        {
-                            type: "pie",
-                            title: "Society Crimes",
-                            values: data.society_counts,
-                            labels: data.society_crimes,
                         },
                     ];
                     var layout = {
                         height: 600,
                         width: 600,
                     };
-                    Plotly.newPlot("propertyPieChart", propertyPieChart_data, layout);
-                    Plotly.newPlot("personPieChart", personPieChart_data, layout);
-                    Plotly.newPlot("societyPieChart", societyPieChart_data, layout);
+                    Plotly.newPlot("pieChart", pieChart_data, layout);
                 });
             });
     }
