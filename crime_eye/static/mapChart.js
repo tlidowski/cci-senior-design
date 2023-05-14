@@ -9,7 +9,7 @@ class MapChart{
         this.divName = divName;
         this.inFeatures = [];
         this.outFeatures = [];
-        this.radius = 3; // Units in pixels
+        this.radius = 1; // Units in miles
         mapboxgl.accessToken = 'pk.eyJ1Ijoic3JhODQiLCJhIjoiY2w4ZjNmcXk4MDllbDQwbnpoOXJwa2VsZSJ9.OsLldCR-T9CjYaBE5Fa4OA';
 
         this.map = new mapboxgl.Map({

@@ -632,11 +632,6 @@ window.addEventListener("load", () => {
 var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
   return new bootstrap.Tooltip(tooltipTriggerEl)
 })
-
     mapChart = new MapChart("mapChart");
-    let slider = document.getElementById("radRange");
-    slider.onclick = function () {
-        mapChart.setRadius(slider.value);
-    };
 });
 
