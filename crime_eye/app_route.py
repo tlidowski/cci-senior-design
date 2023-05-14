@@ -2,9 +2,7 @@ import json
 
 import math
 
-import numpy as np
-from flask import Flask, render_template, jsonify, request
-import requests
+from flask import Flask, render_template, request
 import pandas as pd
 from math import radians, cos, sin, asin, sqrt
 import validation as v
@@ -86,7 +84,6 @@ def get_location_from_name(city):
         return [None, None]
 
 
-
 @app.route('/crimes_pie_chart', methods=['GET'])
 def get_pie_chart():
     # pie chart using crime codes 
@@ -116,7 +113,6 @@ def get_pie_chart():
         'Weapon Law Violations': ['520'],
         'Other': ['90', '90A', '90B', '90C', '90D', '90E', '90F', '90G', '90H', '90I', '90J', '90Z']
     }
-
 
     property_crimes = {
         'Arson': ['200'],
@@ -169,6 +165,7 @@ def get_pie_chart():
         print(f'Faliure: {e}')
         return {}
 
+
 def getCounts(crimes, res):
     crimes_and_counts = {}
     count_sum = sum(res['crime_count'])
@@ -184,6 +181,7 @@ def getCounts(crimes, res):
                         crimes_and_counts[key] = count
 
     return crimes_and_counts
+
 
 @app.route('/crimes_line_graph', methods=['GET'])
 def get_line_graph():
@@ -283,20 +281,24 @@ cityNames = [
 
 citiesInclusions = {}
 
+
 def initializeCitiesInclusions():
-    global citiesInclusions 
+    global citiesInclusions
     citiesInclusions = dict.fromkeys(cityNames, False)
+
+
 initializeCitiesInclusions()
 
 crimes_against = {
-        'Property': ['200', '510', '220', '250', '510', '290', '250', '270', '210', '26', '26A', '26B', '26C', '26D',
-                     '26E', '23', '23A', '23B', '23C', '23D', '23E', '23F', '23G', '23H', '240', '90A'],
-        'Person': ['13', '13A', '13B', '13C', '39', '09', '09A', '09B', '09C', '100', '11', '11A', '11B', '11C',
-                   '11D', '36', '36B'],
-        'Society': ['35', '35A', '35B', '39', '39A', '39B', '39C', '39D', '40', '40A', '40B', '90B', '90C', '90D',
-                    '90E', '90F', '90G', '90H', '90J', '370'],
-        'Other': ['90z', '90Z', '90I']
-    }
+    'Property': ['200', '510', '220', '250', '510', '290', '250', '270', '210', '26', '26A', '26B', '26C', '26D',
+                 '26E', '23', '23A', '23B', '23C', '23D', '23E', '23F', '23G', '23H', '240', '90A'],
+    'Person': ['13', '13A', '13B', '13C', '39', '09', '09A', '09B', '09C', '100', '11', '11A', '11B', '11C',
+               '11D', '36', '36B'],
+    'Society': ['35', '35A', '35B', '39', '39A', '39B', '39C', '39D', '40', '40A', '40B', '90B', '90C', '90D',
+                '90E', '90F', '90G', '90H', '90J', '370'],
+    'Other': ['90z', '90Z', '90I']
+}
+
 
 @app.route('/crimes_stacked_bar_graph', methods=['GET'])
 def get_stacked_bar_graph():
@@ -320,7 +322,7 @@ def get_stacked_bar_graph():
             res = aws.get_crime_descriptions_and_counts(city, engine, start, end)
             crimes_against_counts_per_city[city] = {}
             citiesInclusions[city] == True
-            #-----------------------
+            # -----------------------
             codeCountZip = zip(res['fbi_crime_code'], res['crime_count'])
             for crime_codes, count in codeCountZip:
                 if crime_codes == None:
@@ -335,17 +337,18 @@ def get_stacked_bar_graph():
     engine.close()
     return json.dumps(crimes_against_counts_per_city)
 
+
 # Using AWS
 @app.route('/crimes_from_address', methods=['GET'])
 def get_locations_given_address():
     cityMap = {
         "new york": "New York City",
-        "washington" : 'Washington DC',
+        "washington": 'Washington DC',
     }
     cityName = request.args.get('cityName')
     if cityName.lower() in cityMap.keys():
         cityName = cityMap[cityName.lower()]
-    # City name can be different than our database
+    # City name can be different from our database
 
     start = request.args.get('start')
     end = request.args.get('end')
@@ -361,7 +364,7 @@ def get_locations_given_address():
     if dropdownCity == "Select City":
         return json.dumps(
             {"errors": ["Please select a city from the dropdown first"]}
-        ) 
+        )
     if not v.validateCity(cityName, dropdownCity):
         return json.dumps(
             {"errors": ["Address must be in selected city"]}
@@ -381,7 +384,6 @@ def get_locations_given_address():
 
     engine.close()
 
-    
     crimeFeatures = mp.createFeatures(res, userLon, userLat, radius)
     area_of_circle = getAreaOfCircle(radius)
     crimeScore = -1
@@ -391,7 +393,6 @@ def get_locations_given_address():
 
     try:
         crimeRate = calculateCrimeRate(cityPop, totalCrimes)
-
         total_crimes = len(crimeFeatures["inside"]) + len(crimeFeatures["outside"])
         N = area_of_circle * total_crimes / SQ_of_city
         records_in_circle = len(crimeFeatures["inside"])
@@ -413,8 +414,8 @@ def get_locations_given_address():
             crimeScoreLabel = "Very Safe"
     except Exception as e:
         return json.dumps({
-        "errors": [e],
-    })
+            "errors": [e],
+        })
 
     radiusFeature = mp.generateRadiusGeoJson((userLon, userLat), radius)
     # Todo, generate list based on crime type as well as (or instead of) within radius
@@ -432,10 +433,57 @@ def get_locations_given_address():
     })
 
 
+def get_crime_rate(cityName):
+    try:
+        cityMap = {
+            "new york": "New York City",
+            "washington": 'Washington DC',
+        }
+        if cityName.lower() in cityMap.keys():
+            cityName = cityMap[cityName.lower()]
+        current_engine = aws.initConnection()
+        pop = aws.get_city_population(cityName, current_engine)
+        cityPop = pop["population"].tolist()[0]
+        crimes = aws.get_total_city_crimes(cityName, current_engine)
+        totalCrimes = crimes["count"].tolist()[0]
+        current_engine.close()
+        crimeRate = calculateCrimeRate(cityPop, totalCrimes)
+        return crimeRate
+    except:
+        return 'error'
+
+
+@app.route('/crimes_rate_given_city', methods=['GET'])
+def crimes_rate_given_city():
+    city_name = request.args.get('cityName')
+    cities = json.loads(request.args.get('cities'))
+    if cities:
+        cities = cities.split(', ')
+        if city_name not in cities:
+            cities = [city_name] + cities
+        elif len(cities) == 1:
+            crime_rate = get_crime_rate(city_name)
+            return json.dumps({
+                "crimeRate": crime_rate,
+            })
+        crime_rate_map = {}
+        for current_city_name in cities:
+            crime_rate_map[current_city_name] = get_crime_rate(current_city_name)
+        return json.dumps({
+            "crimeRateMap": crime_rate_map,
+        })
+    else:
+        crime_rate = get_crime_rate(city_name)
+        return json.dumps({
+            "crimeRate": crime_rate,
+        })
+
+
 def calculateCrimeRate(population, total):
-    rate = total/population
-    perThousand = rate*1000
+    rate = total / population
+    perThousand = rate * 1000
     return round(perThousand, 2)
+
 
 def getAreaOfCircle(radius):
     area = 0
@@ -444,6 +492,7 @@ def getAreaOfCircle(radius):
     else:
         area = math.pi * (float(radius) ** 2)
     return area
+
 
 @app.route('/')
 def index():
