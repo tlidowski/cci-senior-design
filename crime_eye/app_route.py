@@ -1,6 +1,7 @@
 import json
 
 import math
+import random
 
 from flask import Flask, render_template, request
 import pandas as pd
@@ -89,9 +90,11 @@ def get_pie_chart():
     # pie chart using crime codes 
     # TODO: group crime codes into categories provided by prof
     crime_type = {
-        'Property' : ['200', '220', '250', '290', '270', '210', '26', '26A', '26B', '26C', '26D', '26E', '23', '23A', '23B', '23C', '23D', '23E', '23F', '23G', '23H', '240', '280'],
-        'Person' : ['09', '09A', '09B', '09C', '100', '11', '11A', '11B', '11C', '11D', '36A', '36B', '120', '13', '13A', '13B', '13C'],
-        'Society' : ['35', '35A', '35B', '39', '39A', '39B', '39C', '39D', '370', '40', '40A', '40B', '520'],
+        'Property': ['200', '220', '250', '290', '270', '210', '26', '26A', '26B', '26C', '26D', '26E', '23', '23A',
+                     '23B', '23C', '23D', '23E', '23F', '23G', '23H', '240', '280'],
+        'Person': ['09', '09A', '09B', '09C', '100', '11', '11A', '11B', '11C', '11D', '36A', '36B', '120', '13', '13A',
+                   '13B', '13C'],
+        'Society': ['35', '35A', '35B', '39', '39A', '39B', '39C', '39D', '370', '40', '40A', '40B', '520'],
         'Other': ['90', '90A', '90B', '90C', '90D', '90E', '90F', '90G', '90H', '90I', '90J', '90Z']
     }
 
@@ -426,6 +429,36 @@ def crimes_rate_given_city():
         return json.dumps({
             "crimeRate": crime_rate,
         })
+
+
+@app.route('/area_population_given_city', methods=['GET'])
+def get_population_to_area_crimes():
+    city_name = request.args.get('cityName')
+    cities = json.loads(request.args.get('cities'))
+    cities = cities.split(', ')
+    if city_name not in cities:
+        cities = [city_name] + cities
+    currentEngine = aws.initConnection()
+    df = aws.getAllCityMetaData(currentEngine)
+    df = df.loc[df['city_name'].isin(cities)]
+    info = {'x': df['area'].to_list(), 'y': df['population'].to_list(), 'mode': 'markers',
+            'text': df['city_name'].to_list()}
+    marker = {'color': [], 'opacity': [], 'size': []}
+    crime_rates = [get_crime_rate(info['text'][i]) for i in range(len(info['text']))]
+    most_crime = max(crime_rates)
+    for i in range(len(cities)):
+        r = str(random.randint(1, 255))
+        g = str(random.randint(1, 255))
+        b = str(random.randint(1, 255))
+        color = 'rgb({}, {}, {})'.format(r, g, b)
+        marker['color'].append(color)
+        marker['opacity'].append(crime_rates[i] / most_crime)
+        marker['size'].append(30)
+    info['marker'] = marker
+    currentEngine.close()
+    return json.dumps({
+        "info": info,
+    })
 
 
 def calculateCrimeRate(population, total):
