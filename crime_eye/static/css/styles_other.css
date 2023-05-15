@@ -62,7 +62,7 @@
   opacity: 0;
 }
 
-/*.table-wrap {*/
-/*  height: 80px;*/
-/*  overflow-y: auto;*/
-/*}*/
+.table-wrap {
+  height: 140px;
+  overflow-y: auto;
+}

@@ -2,8 +2,8 @@ let table_parent = document.getElementById("table_parent");
 let graphHeight = 500;
 let mapChart;
 let compareBtn = document.getElementById("compare");
-let crimeRateSingle= document.getElementById('crimeRateSingle');
-let crimeRateMultiple= document.getElementById('crimeRateMultiple');
+let crimeRateSingle = document.getElementById('crimeRateSingle');
+let crimeRateMultiple = document.getElementById('crimeRateMultiple');
 // document
 //   .getElementById("nav-map-tab")
 //   .addEventListener("shown.bs.tab", function () {
@@ -24,18 +24,18 @@ const cityCompareInput = document.getElementsByClassName(
 
 // Reset map's data when city is selected
 // (Prevents specific address lookup button from triggering after city change) 
-document.getElementById("city").addEventListener('change', function(){
+document.getElementById("city").addEventListener('change', function () {
     mapChart.resetCity();
 })
 
-function isValidInputs(city, start, end){
+function isValidInputs(city, start, end) {
     if (isNaN(start) || city === 'Select City') {
         insert_error("City Selection or Start Year Missing");
         return false;
     }
     if (start < 2020 || start > 2021) {
         insert_error("Start Year Must Be Between 2020-2021");
-        return false;   
+        return false;
     }
     if (!isNaN(end) && (end < 2020 || end > 2021 || start > end)) {
         insert_error("End Year Must Be Between 2020-2021");
@@ -44,19 +44,19 @@ function isValidInputs(city, start, end){
     return true
 }
 
-function getOtherCities(city){
+function getOtherCities(city) {
     let cities = cityCompareInput[0].innerHTML;
-    if(cities === DEFAULT_COMPARE_DROPDOWN_MESSAGE){
+    if (cities === DEFAULT_COMPARE_DROPDOWN_MESSAGE) {
         return null
     }
-    if(cities){
-        cities=cities.replaceAll(", "+city, "")
-        cities=cities.replaceAll(city+", ", "")
-        cities=cities.replaceAll(", "+city, "")
-        cities=cities.replaceAll(city, "")
+    if (cities) {
+        cities = cities.replaceAll(", " + city, "")
+        cities = cities.replaceAll(city + ", ", "")
+        cities = cities.replaceAll(", " + city, "")
+        cities = cities.replaceAll(city, "")
     }
-    if(cities.length===0){
-        cities=null;
+    if (cities.length === 0) {
+        cities = null;
     }
     return cities
 }
@@ -69,28 +69,32 @@ function generateGraphs() {
     // Returns null instead of the dropdown's default message (for comparison purposes w/ null)
     let otherCities = getOtherCities(city);
     console.log(otherCities)
-    
+
     // Validation
-    if(!isValidInputs(city, start, end)){
+    if (!isValidInputs(city, start, end)) {
         return
     }
     generateCrimeTables(city, start, end, otherCities);
     generateMap(city, start, end, otherCities);
-    if(!otherCities) {
+    if (!otherCities) {
         generatePieChart(city, start, end, otherCities);
         generateBarGraph(city, start, end, otherCities);
-        if(graphSide==='multiple'){
+        if (graphSide === 'multiple') {
             $('#multiDataGraphs').collapse('toggle');
             $('#singleDataGraphs').collapse('toggle');
-            graphSide='single';
+            $('#bubbleCollapse').collapse('toggle');
+            $('#pieCollapse').collapse('toggle');
+            graphSide = 'single';
         }
-    }
-    else {
+    } else {
         generateStackedBarGraph(city, start, end, otherCities);
-        if(graphSide==='single'){
+        generateBubbleGraph(city, otherCities);
+        if (graphSide === 'single') {
             $('#singleDataGraphs').collapse('toggle');
             $('#multiDataGraphs').collapse('toggle');
-            graphSide='multiple';
+            $('#pieCollapse').collapse('toggle');
+            $('#bubbleCollapse').collapse('toggle');
+            graphSide = 'multiple';
         }
     }
     generateLineGraph(city, start, end, otherCities);
@@ -103,20 +107,19 @@ function generateGraphs() {
 pull.addEventListener("click", generateGraphs);
 addressButton.addEventListener("click", searchSpecificLocation)
 
-
 function generateMap(city, start, end, otherCities) {
     let dropdownCity = city;
     let radius = mapChart.getRadius();
     const apiKey = "319cf01c353142f082ee1055a6689222";
     var url = `https://api.geoapify.com/v1/geocode/autocomplete?text=${encodeURIComponent(city)}&format=json&limit=5&apiKey=${apiKey}`;
     fetch(url)
-    .then((response) => {
-        return response.json();
-    })
-    .then((data) => {
-        let output = data.results[0]
-        mapChart.setAddressData(output);
-    }).then(_ => {
+        .then((response) => {
+            return response.json();
+        })
+        .then((data) => {
+            let output = data.results[0]
+            mapChart.setAddressData(output);
+        }).then(_ => {
         // Now do the actual map updating
         let lat = mapChart.centerLat;
         let lon = mapChart.centerLon;
@@ -135,7 +138,7 @@ function generateMap(city, start, end, otherCities) {
                     crimeScoreBox.innerHTML = res.crimeScore;
                     let crimeScoreBoxLabel = document.getElementById("safety-score-label");
                     crimeScoreBoxLabel.innerHTML = res.crimeScoreLabel;
-    
+
                     let crimeRateBox = document.getElementById("crime-rate-box");
                     crimeRateBox.innerHTML = res.crimeRate;
                     let crimeRateBoxLabel = document.getElementById("crime-rate-label");
@@ -146,14 +149,12 @@ function generateMap(city, start, end, otherCities) {
 
             });
     })
-    
-
 
 
 }
 
 
-function searchSpecificLocation(){
+function searchSpecificLocation() {
     inputBox = document.getElementById("addressInputBox")
     let dropdownCity = cityInput.value;
     let start = parseInt(startInput.value);
@@ -162,13 +163,13 @@ function searchSpecificLocation(){
 
     // Returns null instead of the dropdown's default message (for comparison purposes w/ null)
     let otherCities = getOtherCities();
-    
+
     // Validation
-    if(!isValidInputs(dropdownCity, start, end)){
+    if (!isValidInputs(dropdownCity, start, end)) {
         return
     }
     let city = mapChart.cityName;
-    if(city == null || !inputBox.value || (inputBox.value == inputBox.placeholder)){
+    if (city == null || !inputBox.value || (inputBox.value == inputBox.placeholder)) {
         insert_error(`Please type a valid address for ${dropdownCity} before searching`)
         return
     }
@@ -196,6 +197,7 @@ function searchSpecificLocation(){
         });
 
 }
+
 function generatePieChart(city, start, end, otherCities) {
     if (otherCities != null) {
         console.log("TEMPORARY: No Pie Chart gen. due to comparison");
@@ -219,7 +221,7 @@ function generatePieChart(city, start, end, otherCities) {
                         },
                     ];
                     var layout = {
-                        height: graphHeight,
+                        height: 310,
                     };
                     Plotly.newPlot("pieChart", pieChart_data, layout);
                 });
@@ -439,7 +441,6 @@ function generateStackedBarGraph(city, start, end, otherCities) {
                 "Crimes by City and Crime Category",
                 "City",
                 "Number of Crimes",
-
             );
 
             Plotly.newPlot("stacked-bar-graph", data, layout);
@@ -478,15 +479,15 @@ function generateCrimeTables(city, start, end, cities) {
                 crimeRateBox.innerHTML = res['crimeRate'];
                 let crimeRateBoxLabel = document.getElementById("crime-rate-label");
                 crimeRateBoxLabel.innerHTML = "per 1000 people";
-                if(crimeRateSide==='multiple'){
+                if (crimeRateSide === 'multiple') {
                     $('#crimeRateMultiple').collapse('toggle');
                     $('#crimeRateSingle').collapse('toggle');
-                    crimeRateSide='single';
+                    crimeRateSide = 'single';
                 }
             } else if ('crimeRateMap' in res) {
                 let crimeRateMap = res['crimeRateMap']
                 let dataContainer = document.getElementById('dataTableContainer');
-                dataContainer.innerHTML='';
+                dataContainer.innerHTML = '';
                 let newTable = document.createElement('table');
                 newTable.setAttribute('id', 'table');
                 dataContainer.appendChild(newTable);
@@ -509,11 +510,33 @@ function generateCrimeTables(city, start, end, cities) {
                     ]
                 });
                 newTable.classList.add('table-dark');
-                if(crimeRateSide==='single'){
+                if (crimeRateSide === 'single') {
                     $('#crimeRateSingle').collapse('toggle');
                     $('#crimeRateMultiple').collapse('toggle');
-                    crimeRateSide='multiple';
+                    crimeRateSide = 'multiple';
                 }
+            }
+        })
+}
+
+function generateBubbleGraph(city, cities) {
+    if (cities) {
+        cities = JSON.stringify(cities);
+    }
+    fetch(`http://127.0.0.1:5000/area_population_given_city?cityName=${city}&cities=${cities}`)
+        .then((response) => {
+            return response.json();
+        })
+        .then((res) => {
+            if ("info" in res) {
+                let data = [res['info']]
+                let layout = {
+                    title: 'Population by Area of Cities',
+                    height: 250,
+                    xaxis: {title: "Area by Square Feet"},
+                    yaxis: {title: "Population by Millions"},
+                };
+                Plotly.newPlot('bubbleGraph', data, layout);
             }
         })
 }
@@ -651,10 +674,11 @@ window.addEventListener("load", () => {
     // Initialize map
     $('#crimeRateSingle').collapse('toggle');
     $('#singleDataGraphs').collapse('toggle');
+    $('#pieCollapse').collapse('toggle');
     var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
-var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
-  return new bootstrap.Tooltip(tooltipTriggerEl)
-})
+    var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+        return new bootstrap.Tooltip(tooltipTriggerEl)
+    })
     mapChart = new MapChart("mapChart");
 });
 
