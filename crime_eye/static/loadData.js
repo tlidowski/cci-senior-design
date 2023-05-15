@@ -62,7 +62,9 @@ function generateGraphs() {
     if(!isValidInputs(city, start, end)){
         return
     }
-
+    if(!end){
+        end=start;
+    }
     generateMap(city, start, end, otherCities);
     generatePieChart(city, start, end, otherCities);
     generateLineGraph(city, start, end, otherCities);

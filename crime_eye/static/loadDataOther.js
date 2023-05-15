@@ -74,6 +74,9 @@ function generateGraphs() {
     if (!isValidInputs(city, start, end)) {
         return
     }
+    if(!end){
+        end=start;
+    }
     generateCrimeTables(city, start, end, otherCities);
     generateMap(city, start, end, otherCities);
     if (!otherCities) {
