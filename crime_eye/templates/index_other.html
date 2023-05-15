@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>CRIME EYE</title>
+    <script src="https://kit.fontawesome.com/634a5ae9d9.js" crossorigin="anonymous"></script>
+    <link
+            href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css"
+            rel="stylesheet"
+            integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x"
+            crossorigin="anonymous"
+    />
+    <link
+            rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.14.0-beta2/css/bootstrap-select.min.css"
+            integrity="sha512-mR/b5Y7FRsKqrYZou7uysnOdCIJib/7r5QeJMFvLNHNhtye3xJp1TdJVPLtetkukFn227nKpXD9OjUc09lx97Q=="
+            crossorigin="anonymous"
+            referrerpolicy="no-referrer"
+    />
+    <link
+            href="https://api.mapbox.com/mapbox-gl-js/v2.11.0/mapbox-gl.css"
+            rel="stylesheet"
+    />
+    <script src="https://api.mapbox.com/mapbox-gl-js/v2.11.0/mapbox-gl.js"></script>
+	<script src='https://cdn.plot.ly/plotly-2.20.0.min.js'></script>
+    <link
+            rel="stylesheet"
+            href="{{ url_for('static', filename='css/maps.css') }}"
+    />
+    <link
+            rel="stylesheet"
+            href="{{ url_for('static', filename='css/styles_other.css') }}"
+    />
+    <link rel="stylesheet" href="https://unpkg.com/bootstrap-table@1.18.0/dist/bootstrap-table.min.css">
+
+</head>
+<body style="background-color:black">
+<div class="container">
+    <div class="row">
+        <div class="col">
+                <div class="header">
+        <div class="flex-container">
+            <img src="static/images/crime-eye.png" style="width: 12%;
+        height: 12%;">
+            <h1 style="color:white; font-size: 80px;">CRIME EYE</h1>
+        </div>
+        <div class="break"></div>
+        <h3 style="color:white; align-self: center;">Keep Your Safety in View</h3>
+    </div>
+        </div>
+    </div>
+    <div class="row mt-3">
+        <div class="col" id="error" style="color:white"></div>
+    </div>
+    <div class="row mb-3">
+        <div class="col">
+            <div class="card text-white bg-dark">
+                <div class="card-header">
+                    <div style="text-align: center;"><h5>Find Crime</h5></div>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col">
+                            <select class="form-control" id="city">
+                                <option id="city-dropdown" selected disabled>
+                                    Select City
+                                </option>
+                                <option>Austin</option>
+                                <option>Baltimore</option>
+                                <option>Boston</option>
+                                <option>Charlotte</option>
+                                <option>Chicago</option>
+                                <option>Denver</option>
+                                <option>Detroit</option>
+                                <option>Los Angeles</option>
+                                <option>New York City</option>
+                                <option>Philadelphia</option>
+                                <option>Seattle</option>
+                                <option>Washington DC</option>
+                            </select>
+                        </div>
+                        <div class="col">
+                            <input
+                                    type="text"
+                                    class="form-control"
+                                    id="start"
+                                    placeholder="Start Year"
+                            />
+                        </div>
+                        <div class="col">
+                            <input
+                                    type="text"
+                                    class="form-control"
+                                    id="end"
+                                    placeholder="End Year"
+                            />
+                        </div>
+                        <div class="col">
+                            <select class="selectpicker w-100"
+                                    multiple
+                                    id="city-multi-select">
+                                <option>Austin</option>
+                                <option>Baltimore</option>
+                                <option>Boston</option>
+                                <option>Charlotte</option>
+                                <option>Chicago</option>
+                                <option>Denver</option>
+                                <option>Detroit</option>
+                                <option>Los Angeles</option>
+                                <option>New York City</option>
+                                <option>Philadelphia</option>
+                                <option>Seattle</option>
+                                <option>Washington DC</option>
+                            </select>
+                        </div>
+                        <div class="col">
+                            <div class="input-group">
+                                <button class="btn btn-light w-100" id="pull" style="color: black">Search</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+                <div class="col">
+                    <div class="row">
+                        <div class="col" id="crimeRateCollapse">
+                            <div class="card text-white bg-dark mb-3 collapse"
+                                 id="crimeRateSingle">
+                                <div class="card-header text-center">City Crime Rate
+                                    <button type="button" class="btn btn-dark" data-bs-toggle="tooltip"
+                                            data-bs-placement="top"
+                                            title="Crime Rate Per 1000 People from Total Crime of City"><i
+                                            class="fa-solid fa-circle-info">
+                                    </i></button>
+                                </div>
+                                <div class="card-body text-center">
+                                    <h1 class="score" id="crime-rate-box"></h1>
+                                    <h6 class="scoreLabel" id="crime-rate-label"></h6>
+                                </div>
+                            </div>
+                            <div class="card text-white bg-dark mb-3 collapse"
+                                 id="crimeRateMultiple">
+                                <div class="card-header text-center">City Crime Rates
+                                    <button type="button" class="btn btn-dark" data-bs-toggle="tooltip"
+                                            data-bs-placement="top"
+                                            title="Crime Rate Per 1000 People from Total Crime of Cities"><i
+                                            class="fa-solid fa-circle-info">
+                                    </i></button>
+                                </div>
+                                <div class="card-body">
+                                    <div class="table-wrap">
+                                    <div class='table-light' id="dataTableContainer">
+                                        <table id="table"></table>
+                                    </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+    <div class="row mb-3">
+        <div class="col">
+            <div class="row">
+                <div class="col col-10">
+                    <div class="autocomplete-container" id="autocomplete-container" style="color: black">
+                    </div>
+                </div>
+                <div class="col col-2">
+                    <button class="btn btn-light w-100 h-75" id="addressSearchButton" style="color: black">
+                        Search Address
+                    </button>
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col">
+                    <div id="mapChart" class="mapType">
+                        <div class="card bg-dark text-white"
+                             style="position: absolute; z-index: 1; left: 0; top:0;">
+                            <h5 class="card-header text-center">Safety Score
+                                <button type="button" class="btn btn-dark" data-bs-toggle="tooltip"
+                                        data-bs-placement="top"
+                                        title="Safety Score Based on Population, Size, and Location of City"
+                                        style="border: None;"><i class="fa-solid fa-circle-info">
+                                </i></button>
+                            </h5>
+                            <h1 class="score text-center" id="safety-score-box"></h1>
+                            <h6 class="scoreLabel text-center" id="safety-score-label"></h6>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col col-6">
+                    <div class="row collapse" id="singleDataGraphs">
+                        <div class="col col-6">
+                    <div id="pieChart"></div>
+                </div>
+                        <div class="col col-6">
+                    <div id="barGraph" class="mapType"></div>
+                </div>
+                    </div>
+                    <div class="row collapse" id="multiDataGraphs">
+                        <div class="col">
+                    <div id="stacked-bar-graph" class="mapType"></div>
+                </div>
+                    </div>
+                </div>
+                <div class="col col-6">
+                    <div id="lineGraph" ></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+<script src="{{ url_for('static', filename='loadDataOther.js') }}"></script>
+<script src="{{ url_for('static', filename='mapChart.js') }}"></script>
+<script src="{{ url_for('static', filename='addressLookup.js') }}"></script>
+<script src="{{ url_for('static', filename='tools.js') }}"></script>
+<script
+        src="https://code.jquery.com/jquery-3.6.0.min.js"
+        integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="
+        crossorigin="anonymous"
+></script>
+<script
+        src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-gtEjrD/SeCtmISkJkNUaaKMoLD0//ElJ19smozuHV6z3Iehds+3Ulb9Bn9Plx0x4"
+        crossorigin="anonymous"
+></script>
+<script
+        src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.14.0-beta2/js/bootstrap-select.min.js"
+        integrity="sha512-FHZVRMUW9FsXobt+ONiix6Z0tIkxvQfxtCSirkKc5Sb4TKHmqq1dZa8DphF0XqKb3ldLu/wgMa8mT6uXiLlRlw=="
+        crossorigin="anonymous"
+        referrerpolicy="no-referrer"
+></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+<script src="https://unpkg.com/bootstrap-table@1.18.0/dist/bootstrap-table.min.js"></script>
+</body>
+</html>
