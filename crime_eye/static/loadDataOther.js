@@ -233,92 +233,79 @@ function generatePieChart(city, start, end, otherCities) {
 }
 
 function generateLineGraph(city, start, end, otherCities) {
-    if (otherCities != null) {
-        console.log("TEMPORARY: No Line Graph gen. due to comparison");
-        return; // TODO Accomodate other cities on graph
-    } else {
-        fetch(
-            `http://127.0.0.1:5000/crimes_line_graph?city=${city}&start=${start}&end=${end}`
-        )
-            .then((response) => {
-                return response.json();
-            })
-            .then((data) => {
-                $(document).ready(function () {
-                    var countsByYearMonth = {};
-                    for (var i = 0; i < data.dates.length; i++) {
-                        var splitDate = data.dates[i].split("/");
-                        var year = parseInt(splitDate[1]);
-                        if (!isNaN(year)) {
-                            var month = splitDate[0];
-                            if (!countsByYearMonth[year]) {
-                                countsByYearMonth[year] = {};
-                            }
-                            if (!countsByYearMonth[year][month]) {
-                                countsByYearMonth[year][month] = 0;
-                            }
-                            countsByYearMonth[year][month] += data.counts[i];
-                        }
-                    }
+    fetch(
+        `http://127.0.0.1:5000/crimes_line_graph?city=${city}&start=${start}&end=${end}&otherCities=${otherCities}`
+    )
+        .then((response) => {
+            return response.json();
+        })
+        .then((data) => {
+            $(document).ready(function () {
+                var traces = [];
+                for (const city in data) {
+                    if (data[city]) {
+                        var dates = data[city].dates.map(dateString => {
+                            var parts = dateString.split('/');
+                            var month = parseInt(parts[0], 10);
+                            var year = parseInt(parts[1], 10);
+                            return new Date(year, month - 1);
+                        });
 
-                    var lineGraph_data = [];
-                    for (var year in countsByYearMonth) {
-                        var x = [];
-                        var y = [];
-                        for (var month in countsByYearMonth[year]) {
-                            x.push(getMonthName(parseInt(month)));
-                            y.push(countsByYearMonth[year][month]);
-                        }
+                        var sortedData = data[city].counts.map((count, index) => ({
+                            date: dates[index],
+                            count: count
+                        })).sort((a, b) => a.date - b.date);
 
-                        var monthOrder = [
-                            "Jan",
-                            "Feb",
-                            "Mar",
-                            "Apr",
-                            "May",
-                            "Jun",
-                            "Jul",
-                            "Aug",
-                            "Sep",
-                            "Oct",
-                            "Nov",
-                            "Dec",
-                        ];
-                        x.sort((a, b) => monthOrder.indexOf(a) - monthOrder.indexOf(b));
-                        y.sort(
-                            (a, b) =>
-                                monthOrder.indexOf(x[y.indexOf(a)]) -
-                                monthOrder.indexOf(x[y.indexOf(b)])
-                        );
-
-                        lineGraph_data.push({
+                        traces.push({
                             type: "scatter",
-                            y: y,
-                            x: x,
-                            name: year.toString(),
+                            x: sortedData.map(data => data.date),
+                            y: sortedData.map(data => data.count),
+                            name: city,
                         });
                     }
-                    // let newHeight = 265;
-                    // if(crimeRateSide==='single'){
-                    //     newHeight = 312;
-                    // }
-                    var layout = {
-                        height: graphHeight,
-                        title: "Crime Timeline",
-                        xaxis: {
-                            title: "Month",
-                        },
-                        yaxis: {
-                            title: "Number of Crimes",
-                            rangemode: "tozero",
-                        },
-                    };
+                }
 
-                    Plotly.newPlot("lineGraph", lineGraph_data, layout);
-                });
+                var selectorOptions = {
+                    buttons: [{
+                        step: 'month',
+                        stepmode: 'backward',
+                        count: 1,
+                        label: '1M'
+                    }, {
+                        step: 'month',
+                        stepmode: 'forward',
+                        count: 6,
+                        label: '6M'
+                    },{
+                        step: 'year',
+                        stepmode: 'forward',
+                        count: 1,
+                        label: '1Y'
+                    }, {
+                        step: 'all',
+                        label: 'All'
+                    }],
+                };
+                var layout = {
+                    height: graphHeight,
+                    title: "Crime History",
+                    xaxis: {
+                        title: "Month/Year",
+                        tickangle: -45,
+                        rangeselector: selectorOptions,
+                        rangeslider: {}
+                    },
+                    yaxis: {
+                        title: "Criminal Activity",
+                        rangemode: "tozero",
+                    },
+                };
+
+                Plotly.newPlot("lineGraph", traces, layout);
             });
-    }
+        });
 }
+
 
 const crimeTypes = ["Property", "Person", "Society", "Other"];
 

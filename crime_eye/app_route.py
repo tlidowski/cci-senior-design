@@ -137,27 +137,37 @@ def getCounts(crimes, res):
 
 @app.route('/crimes_line_graph', methods=['GET'])
 def get_line_graph():
+    citiesList = []
+
     city = request.args.get('city')
     start = request.args.get('start')
     end = request.args.get('end')
+    otherCities = request.args.get('otherCities').split(",")
+    for x in range(len(otherCities)):
+        otherCities[x] = otherCities[x].strip()
+    citiesList.append(city)
+    if otherCities[0] != 'null':
+        citiesList.extend(otherCities)
+    data = {}
+
     try:
-        engine = aws.initConnection()
-        res = aws.getCityDataGivenYears(city, start, end, engine)
-        engine.close()
+        for city in citiesList:
+            engine = aws.initConnection()
+            res = aws.getCityDataGivenYears(city, start, end, engine)
+            engine.close()
 
-        res['date_occurred'] = pd.to_datetime(res['date_occurred']).dt.strftime('%m/%Y')
-        crimes_counted = res['date_occurred'].value_counts().rename_axis('dates').sort_index().reset_index(
-            name='counts')
-        counts_filtered = crimes_counted[crimes_counted['counts'] > 0]
+            res['date_occurred'] = pd.to_datetime(res['date_occurred']).dt.strftime('%m/%Y')
+            crimes_counted = res['date_occurred'].value_counts().rename_axis('dates').sort_index().reset_index(name='counts')
+            counts_filtered = crimes_counted[crimes_counted['counts'] > 0]
+            data[city] = {
+                "counts": counts_filtered['counts'].to_list(),
+                "dates": counts_filtered['dates'].to_list()
+            }
 
-        return json.dumps({
-            "counts": counts_filtered['counts'].to_list(),
-            "dates": counts_filtered['dates'].to_list()
-        })
+        return json.dumps(data)
     except Exception as e:
         print(f'Failure: {e}')
         return {}
-
 
 @app.route('/crimes_bar_graph', methods=['GET'])
 def get_bar_graph():
@@ -478,7 +488,7 @@ def getAreaOfCircle(radius):
 
 @app.route('/')
 def index():
-    return render_template("index.html")
+    return render_template("index_other.html")
 
 
 if __name__ == '__main__':
