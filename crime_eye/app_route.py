@@ -84,6 +84,42 @@ def get_location_from_name(city):
     except:
         return [None, None]
 
+denverCodesAndDescriptions = {
+"['13A']":"aggravated-assault",
+"['280', '90Z', '39B', '39C', '39D', '510', '520', '90C', '90J', '100', '13A', '210', '26A']":"all-other-crimes",
+"['200']":"arson",        
+"['23H', '240']":"auto-theft",
+"['220']":"burglary",
+"['35A', '35B', '90G', '26A']":"drug-alcohol",
+"['23A', '23B', '23C', '23E', '23D', '23H', '23F']":"larceny",
+"['09A', '09B']":"murder",
+"['90Z', '36A', '90H', '90Z', '370', '36B', '13B']":"other-crimes-against-persons",
+"['290', '40B', '40A', '90C', '13C']":"public-disorder",
+"['120']":"robbery",
+"['11A', '11B', '11C', '11D']":"sexual-assault",
+"['23F', '240']":"theft-from-motor-vehicle",
+"":"traffic-accident",
+"['250', '90Z', '250', '26A', '26C', '26B', '90A', '26E', '26G', '270']":"white-collar-crime",
+}
+
+# https://ucr.fbi.gov/nibrs/2018/resource-pages/crimes_against_persons_property_and_society-2018.pdf
+denverDescriptionsAndCategories = {
+    "aggravated-assault":"Person",
+    "all-other-crimes":"Other",
+    "arson":"Property",
+    "auto-theft":"Property",
+    "burglary":"Property",
+    "drug-alcohol":"Society",
+    "larceny":"Property",
+    "murder":"Person",
+    "other-crimes-against-persons":"Person",
+    "public-disorder":"Society",
+    "robbery":"Property",
+    "sexual-assault":"Person",
+    "theft-from-motor-vehicle":"Property",
+    "traffic-accident":"Other",
+    "white-collar-crime":"Other",
+}
 
 @app.route('/crimes_pie_chart', methods=['GET'])
 def get_pie_chart():
@@ -114,7 +150,7 @@ def get_pie_chart():
             "property_crimes": list(crimeCounts.keys()),
         })
     except Exception as e:
-        print(f'Faliure: {e}')
+        print(f'Failure: {e}')
         return {}
 
 
@@ -278,24 +314,34 @@ def get_stacked_bar_graph():
 
     engine = aws.initConnection()
     crimes_against_counts_per_city = {}
-
     for city in citiesList:
         if (citiesInclusions[city] == False):
             res = aws.get_crime_descriptions_and_counts(city, engine, start, end)
             crimes_against_counts_per_city[city] = {}
             citiesInclusions[city] == True
-            # -----------------------
             codeCountZip = zip(res['fbi_crime_code'], res['crime_count'])
+            
             for crime_codes, count in codeCountZip:
                 if crime_codes == None:
                     continue
-                for crime_code in crime_codes:
-                    for category, codes in zip(crimes_against.keys(), crimes_against.values()):
-                        if crime_code in codes:
-                            if category in crimes_against_counts_per_city[city].keys():
-                                crimes_against_counts_per_city[city][category] += count
-                            else:
-                                crimes_against_counts_per_city[city][category] = count
+                crime_codes_str = str(crime_codes)
+
+                if city == "Denver":
+                    description = denverCodesAndDescriptions[crime_codes_str]
+                    category = denverDescriptionsAndCategories[description]
+                    if category in crimes_against_counts_per_city[city].keys():
+                        crimes_against_counts_per_city[city][category] += count
+                    else:
+                         crimes_against_counts_per_city[city][category] = count
+
+                else:
+                    for crime_code in crime_codes:
+                        for category, codes in zip(crimes_against.keys(), crimes_against.values()):
+                            if crime_code in codes:
+                                if category in crimes_against_counts_per_city[city].keys():
+                                    crimes_against_counts_per_city[city][category] += count
+                                else:
+                                    crimes_against_counts_per_city[city][category] = count
     engine.close()
     return json.dumps(crimes_against_counts_per_city)
 
