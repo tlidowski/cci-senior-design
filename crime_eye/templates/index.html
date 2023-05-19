@@ -3,6 +3,7 @@
 <head>
     <title>CRIME EYE</title>
     <script src="https://kit.fontawesome.com/634a5ae9d9.js" crossorigin="anonymous"></script>
+    <link rel="shortcut icon" href="{{ url_for('static', filename='/images/favicon.svg') }}">
     <link
             href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css"
             rel="stylesheet"
@@ -21,161 +22,212 @@
             rel="stylesheet"
     />
     <script src="https://api.mapbox.com/mapbox-gl-js/v2.11.0/mapbox-gl.js"></script>
-    <script src="https://cdn.plot.ly/plotly-2.18.2.min.js"></script>
+    <script src='https://cdn.plot.ly/plotly-2.20.0.min.js'></script>
     <link
             rel="stylesheet"
             href="{{ url_for('static', filename='css/maps.css') }}"
     />
     <link
             rel="stylesheet"
-            href="{{ url_for('static', filename='css/styles.css') }}"
+            href="{{ url_for('static', filename='css/styles_other.css') }}"
     />
     <link rel="stylesheet" href="https://unpkg.com/bootstrap-table@1.18.0/dist/bootstrap-table.min.css">
 
 </head>
 <body style="background-color:black">
 <div class="container">
-    <br/>
-    <div class="header">
-        <div class="flex-container">
-            <img src="static/images/crime-eye.png" style="width: 12%;
-        height: 12%;">
-            <h1 style="color:white; font-size: 80px;">CRIME EYE</h1>
-        </div>
-        <div class="break"></div>
-        <h3 style="color:white; align-self: center;">Keep Your Safety in View</h3>
-    </div>
-    <br/>
     <div class="row">
+        <div class="col">
+            <div class="header">
+                <div class="flex-container">
+                    <img src="static/images/crime-eye.png" style="width: 12%;
+        height: 12%;">
+                    <h1 style="color:white; font-size: 80px;">CRIME EYE</h1>
+                </div>
+                <div class="break"></div>
+                <h3 style="color:white; align-self: center;">Keep Your Safety in View</h3>
+            </div>
+        </div>
+    </div>
+    <div class="row mt-3">
         <div class="col" id="error" style="color:white"></div>
     </div>
-    <div>
-        <div class="card crime-background">
-            <div class="card-header">
-                <h5>Find Crime</h5>
-            </div>
-            <div class="card-body flex-container">
-                <div class="flex-item">
-                    <select class="form-control" id="city">
-                        <option id="city-dropdown" selected disabled>
-                            Select City
-                        </option>
-                        <option>Austin</option>
-                        <option>Baltimore</option>
-                        <option>Boston</option>
-                        <option>Charlotte</option>
-                        <option>Chicago</option>
-                        <option>Denver</option>
-                        <option>Detroit</option>
-                        <option>Los Angeles</option>
-                        <option>New York City</option>
-                        <option>Philadelphia</option>
-                        <option>Seattle</option>
-                        <option>Washington DC</option>
-                    </select>
+    <div class="row mb-3">
+        <div class="col">
+            <div class="card text-white bg-dark">
+                <div class="card-header">
+                    <div style="text-align: center;"><h5>Find Crime</h5></div>
                 </div>
-                <div class="flex-item">
-                    <input
-                            type="text"
-                            class="form-control"
-                            id="start"
-                            placeholder="Start Year"
-                    />
-                </div>
-                <div class="flex-item">
-                    <input
-                            type="text"
-                            class="form-control"
-                            id="end"
-                            placeholder="End Year"
-                    />
-                </div>
-                <div class="flex-item">
-                    <select class="selectpicker w-100"
-                            multiple
-                            id="city-multi-select">
-                        <option>Austin</option>
-                        <option>Baltimore</option>
-                        <option>Boston</option>
-                        <option>Charlotte</option>
-                        <option>Chicago</option>
-                        <option>Denver</option>
-                        <option>Detroit</option>
-                        <option>Los Angeles</option>
-                        <option>New York City</option>
-                        <option>Philadelphia</option>
-                        <option>Seattle</option>
-                        <option>Washington DC</option>
-                    </select>
-
-                </div>
-                <div class="flex-item">
-                    <div class="input-group">
-                        <button class="btn btn-light w-100" id="pull" style="color: black">Search</button>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col">
+                            <select class="form-control" id="city">
+                                <option id="city-dropdown" selected disabled>
+                                    Select City
+                                </option>
+                                <option>Austin</option>
+                                <option>Baltimore</option>
+                                <option>Boston</option>
+                                <option>Charlotte</option>
+                                <option>Chicago</option>
+                                <option>Denver</option>
+                                <option>Detroit</option>
+                                <option>Los Angeles</option>
+                                <option>New York City</option>
+                                <option>Philadelphia</option>
+                                <option>Seattle</option>
+                                <option>Washington DC</option>
+                            </select>
+                        </div>
+                        <div class="col">
+                            <input
+                                    type="text"
+                                    class="form-control"
+                                    id="start"
+                                    placeholder="Start Year"
+                            />
+                        </div>
+                        <div class="col">
+                            <input
+                                    type="text"
+                                    class="form-control"
+                                    id="end"
+                                    placeholder="End Year"
+                            />
+                        </div>
+                        <div class="col">
+                            <select class="selectpicker w-100"
+                                    multiple
+                                    id="city-multi-select">
+                                <option>Austin</option>
+                                <option>Baltimore</option>
+                                <option>Boston</option>
+                                <option>Charlotte</option>
+                                <option>Chicago</option>
+                                <option>Denver</option>
+                                <option>Detroit</option>
+                                <option>Los Angeles</option>
+                                <option>New York City</option>
+                                <option>Philadelphia</option>
+                                <option>Seattle</option>
+                                <option>Washington DC</option>
+                            </select>
+                        </div>
+                        <div class="col">
+                            <div class="input-group">
+                                <button class="btn btn-light w-100" id="pull" style="color: black">Search</button>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="card crime-background">
+    </div>
+    <div class="row">
+        <div class="col">
             <div class="row">
-                <div class="col" style="padding-left: 40px; padding-right: 10px; margin-top: 20px;">
-                 <div class="autocomplete-container" id="autocomplete-container" style="color: black">
-                            </div>
-                    <button class="btn btn-light w-10" id="addressSearchButton" style="color: black">Search Address</button>
-
-                    </div>
             </div>
+        </div>
+    </div>
+    <div class="row mb-3">
+        <div class="col">
             <div class="row">
+                <div class="col col-10">
+                    <div class="autocomplete-container" id="autocomplete-container" style="color: black">
+                    </div>
+                </div>
+                <div class="col col-2">
+                    <button class="btn btn-light w-100 h-75" id="addressSearchButton" style="color: black">
+                        Search Address
+                    </button>
+                </div>
+            </div>
+            <div class="row mb-3">
                 <div class="col col-8">
-                    <div class="row">
-                        <div class="card-body" id="chart-container">
-                            <div id="mapChart" class="mapType">
-                                <div class="card crime-background"
-                                     style="position: absolute; z-index: 1; left: 0; top: -17px;">
-                                    <h5 class="card-header">Safety Score
-                                    <button type="button" class="crime-background" data-bs-toggle="tooltip" data-bs-placement="top" title="Safety Score Based on Population, Size, and Location of City" style="border: None;"><i class="fa-solid fa-circle-info" >
+                    <div id="mapChart" class="mapType">
+                        <div class="card bg-dark text-white"
+                             style="position: absolute; z-index: 1; left: 0; top:0;">
+                            <h5 class="card-header text-center">Safety Score
+                                <button type="button" class="btn btn-dark" data-bs-toggle="tooltip"
+                                        data-bs-placement="top"
+                                        title="Safety Score Based on Population, Size, and Location of City"
+                                        style="border: None;"><i class="fa-solid fa-circle-info">
                                 </i></button>
-                                    </h5>
-                                    <h1 class="score" id="safety-score-box"></h1>
-                                    <h6 class="scoreLabel" id="safety-score-label"></h6>
+                            </h5>
+                            <h1 class="score text-center" id="safety-score-box"></h1>
+                            <h6 class="scoreLabel text-center" id="safety-score-label"></h6>
+                        </div>
+                    </div>
+                </div>
+                <div class="col col-4">
+                    <div class="row">
+                        <div class="col" id="crimeRateCollapse">
+                            <div class="card text-white bg-dark mb-3 collapse"
+                                 id="crimeRateSingle">
+                                <div class="card-header text-center">City Crime Rate
+                                    <button type="button" class="btn btn-dark" data-bs-toggle="tooltip"
+                                            data-bs-placement="top"
+                                            title="Crime Rate Per 1000 People from Total Crime of City"><i
+                                            class="fa-solid fa-circle-info">
+                                    </i></button>
+                                </div>
+                                <div class="card-body text-center">
+                                    <h1 class="score" id="crime-rate-box"></h1>
+                                    <h6 class="scoreLabel" id="crime-rate-label"></h6>
                                 </div>
                             </div>
+                            <div class="card text-white bg-dark mb-3 collapse"
+                                 id="crimeRateMultiple">
+                                <div class="card-header text-center">City Crime Rates
+                                    <button type="button" class="btn btn-dark" data-bs-toggle="tooltip"
+                                            data-bs-placement="top"
+                                            title="Crime Rate Per 1000 People from Total Crime of Cities"><i
+                                            class="fa-solid fa-circle-info">
+                                    </i></button>
+                                </div>
+                                <div class="card-body">
+                                    <div class="table-wrap">
+                                        <div class='table-light' id="dataTableContainer">
+                                            <table id="table"></table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row collapse" id="bubbleCollapse">
+                        <div class="col">
+                            <div id="bubbleGraph"></div>
+                        </div>
+                    </div>
+                    <div class="row collapse" id="pieCollapse">
+                        <div class="col">
                             <div id="pieChart"></div>
-                            <div id="lineGraph"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col col-6">
+                    <div class="row collapse" id="singleDataGraphs">
+                        <div class="col">
                             <div id="barGraph" class="mapType"></div>
+                        </div>
+                    </div>
+                    <div class="row collapse" id="multiDataGraphs">
+                        <div class="col">
                             <div id="stacked-bar-graph" class="mapType"></div>
                         </div>
                     </div>
                 </div>
-                <div class="col col-4" id="crimeRateCollapse">
-                    <div class="row" >
-                        <div class="card text-white bg-dark mb-3 collapse" style="max-width: 26rem;" id="crimeRateSingle">
-                            <div class="card-header">City Crime Rate
-                                <button type="button" class="btn btn-dark" data-bs-toggle="tooltip" data-bs-placement="top" title="Crime Rate Per 1000 People from Total Crime of City"><i class="fa-solid fa-circle-info" >
-                                </i></button>
-                            </div>
-                            <div class="card-body">
-                                <h1 class="score" id="crime-rate-box"></h1>
-                                <h6 class="scoreLabel" id="crime-rate-label"></h6>
-                            </div>
-                        </div>
-                        <div class="card text-white bg-dark mb-3 collapse" style="max-width: 26rem;" id="crimeRateMultiple">
-                            <div class="card-header">City Crime Rates
-                                <button type="button" class="btn btn-dark" data-bs-toggle="tooltip" data-bs-placement="top" title="Crime Rate Per 1000 People from Total Crime of Cities"><i class="fa-solid fa-circle-info" >
-                                </i></button>
-                            </div>
-                            <div class="card-body">
-                                <div class='table-light' id="dataTableContainer">
-                                    <table id="table"></table>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                <div class="col col-6">
+                    <div id="lineGraph"></div>
                 </div>
             </div>
         </div>
     </div>
 </div>
+</body>
 <script src="{{ url_for('static', filename='loadData.js') }}"></script>
 <script src="{{ url_for('static', filename='mapChart.js') }}"></script>
 <script src="{{ url_for('static', filename='addressLookup.js') }}"></script>
