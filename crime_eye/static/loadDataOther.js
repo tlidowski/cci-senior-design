@@ -523,8 +523,8 @@ function generateBubbleGraph(city, cities) {
                 let layout = {
                     title: 'Population by Area of Cities',
                     height: 250,
-                    xaxis: {title: "Area by Square Feet"},
-                    yaxis: {title: "Population by Millions"},
+                    xaxis: {title : "Area(mi<sup>2</sup>)"},
+                    yaxis: {title: "Population"},
                 };
                 Plotly.newPlot('bubbleGraph', data, layout);
             }
