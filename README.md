@@ -8,12 +8,13 @@ Thinking of moving? Planning a vacation? Or sending a child off to college?<br /
 Use Crime Eye to keep safety in view!
 
 ## Usage
-Fill in the Start Year and End Year text boxes<br />
-Fill in the City Name as well<br />
-Hit Search button and see data populate in table! <br />
+Select the City you would like to search<br />
+Fill in the Start and End Year boxes (only currently supporting 2020 and 2021)<br />
+To compare multiple cities, select another from the other dropdown<br />
+Hit the Search button and see data populate below!<br />
+To view a specific location, enter the address and hit the Search Address button<br />
+The map will move to that specific location if it is within the selected city<br />
+
 
 ## Contributing
 This project is not looking for external contributors at this time.
-
-## Project status
-This project is currently in it's first phase and is a Work In Progress.
