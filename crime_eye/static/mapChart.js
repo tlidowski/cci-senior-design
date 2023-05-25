@@ -151,8 +151,6 @@ class MapChart{
             }
         )
 
-        // Results of data should be sent from server
-
     }
     resetCity(){
         this.cityName = null;

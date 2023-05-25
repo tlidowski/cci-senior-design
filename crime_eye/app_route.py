@@ -127,7 +127,6 @@ exceptionCities={
 @app.route('/crimes_pie_chart', methods=['GET'])
 def get_pie_chart():
     # pie chart using crime codes 
-    # TODO: group crime codes into categories provided by prof
     crime_type = {
         'Property': ['200', '220', '250', '290', '270', '210', '26', '26A', '26B', '26C', '26D', '26E', '23', '23A',
                      '23B', '23C', '23D', '23E', '23F', '23G', '23H', '240', '280'],
@@ -445,7 +444,6 @@ def get_locations_given_address():
         })
 
     radiusFeature = mp.generateRadiusGeoJson((userLon, userLat), radius)
-    # Todo, generate list based on crime type as well as (or instead of) within radius
     return json.dumps({
         "errors": [],
         "center": {
