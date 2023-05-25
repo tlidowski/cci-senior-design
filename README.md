@@ -1,6 +1,6 @@
 # Crime Eye
 ## What is Crime Eye?
-Crime Eye is a web-application that allows users to search and explore crime data and statistics for a given location.
+Crime Eye is a comprehensive full-stack web application that provides users with a dashboard of crime statistics from various cities across the United States.
 
 ## Who is Crime Eye for?
 Crime Eye is for anyone who wants to know more about a certain area.<br />
